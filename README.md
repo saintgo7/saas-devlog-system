@@ -29,7 +29,8 @@
 ### 1. 시스템 설치 (1분)
 
 ```bash
-cd ~/dev-log-system
+git clone https://github.com/saintgo7/saas-devlog-system.git
+cd saas-devlog-system
 ./install.sh
 ```
 
@@ -283,7 +284,8 @@ cd your-project/
 
 ### 시스템 재설치
 ```bash
-cd ~/dev-log-system
+cd ~/saas-devlog-system
+git pull
 ./install.sh
 ```
 
@@ -293,7 +295,7 @@ cd ~/dev-log-system
 
 ### "Template not found"
 ```bash
-cd ~/dev-log-system
+cd ~/saas-devlog-system
 ./install.sh
 ```
 
@@ -353,9 +355,10 @@ Copyright (c) 2026 Ph.D SNT Go.
 
 ## 📧 지원
 
-- GitHub: [저장소 URL]
-- Email: [이메일]
-- Docs: ~/dev-log-system/docs/
+- GitHub: https://github.com/saintgo7/saas-devlog-system
+- Issues: https://github.com/saintgo7/saas-devlog-system/issues
+- Releases: https://github.com/saintgo7/saas-devlog-system/releases
+- Docs: https://github.com/saintgo7/saas-devlog-system/tree/main/docs
 
 ---
 
