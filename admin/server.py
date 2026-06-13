@@ -11,7 +11,7 @@ from typing import Optional, List
 from contextlib import contextmanager
 import json
 
-app = FastAPI(title="Dev Log Admin API", version="1.0.0")
+app = FastAPI(title="Dev Log Admin API", version="2.0.0")
 
 app.add_middleware(
     CORSMiddleware,
@@ -291,15 +291,149 @@ def health_check():
                 content={"status": "unhealthy", "error": str(e)}
             )
 
+# ==========================================
+# Infrastructure API Endpoints
+# ==========================================
+
+@app.get("/api/servers")
+def list_servers(provider: Optional[str] = None):
+    """List all servers, optionally filtered by provider"""
+    with get_db() as conn:
+        if provider:
+            rows = conn.execute(
+                "SELECT * FROM servers WHERE provider = ? ORDER BY name", (provider,)
+            ).fetchall()
+        else:
+            rows = conn.execute("SELECT * FROM servers ORDER BY provider, name").fetchall()
+
+        return [dict(row) for row in rows]
+
+@app.get("/api/servers/{slug}")
+def get_server(slug: str):
+    """Get server details with deployed projects"""
+    with get_db() as conn:
+        server = conn.execute("SELECT * FROM servers WHERE slug = ?", (slug,)).fetchone()
+        if not server:
+            raise HTTPException(status_code=404, detail="Server not found")
+
+        # Get projects deployed on this server
+        deployments = conn.execute("""
+            SELECT d.*, p.slug as project_slug, p.name as project_name
+            FROM deployments d
+            JOIN projects p ON d.project_id = p.id
+            WHERE d.server_id = ?
+            ORDER BY p.name
+        """, (server["id"],)).fetchall()
+
+        result = dict(server)
+        result["deployments"] = [dict(d) for d in deployments]
+        return result
+
+@app.get("/api/deployments")
+def list_deployments(environment: Optional[str] = None):
+    """List all deployments with project and server info"""
+    with get_db() as conn:
+        query = """
+            SELECT d.*,
+                   p.slug as project_slug, p.name as project_name, p.domain as project_domain,
+                   s.slug as server_slug, s.name as server_name, s.provider as server_provider
+            FROM deployments d
+            JOIN projects p ON d.project_id = p.id
+            JOIN servers s ON d.server_id = s.id
+        """
+        params = []
+        if environment:
+            query += " WHERE d.environment = ?"
+            params.append(environment)
+        query += " ORDER BY p.name, d.environment"
+
+        rows = conn.execute(query, params).fetchall()
+        return [dict(row) for row in rows]
+
+@app.get("/api/projects/{slug}/deployments")
+def get_project_deployments(slug: str):
+    """Get deployment info for a specific project"""
+    with get_db() as conn:
+        project = conn.execute("SELECT id FROM projects WHERE slug = ?", (slug,)).fetchone()
+        if not project:
+            raise HTTPException(status_code=404, detail="Project not found")
+
+        deployments = conn.execute("""
+            SELECT d.*, s.slug as server_slug, s.name as server_name,
+                   s.provider as server_provider, s.host as server_host
+            FROM deployments d
+            JOIN servers s ON d.server_id = s.id
+            WHERE d.project_id = ?
+            ORDER BY d.environment
+        """, (project["id"],)).fetchall()
+
+        tunnels = conn.execute("""
+            SELECT * FROM cloudflare_tunnels WHERE project_id = ?
+        """, (project["id"],)).fetchall()
+
+        return {
+            "deployments": [dict(d) for d in deployments],
+            "tunnels": [dict(t) for t in tunnels]
+        }
+
+@app.get("/api/tunnels")
+def list_tunnels():
+    """List all Cloudflare tunnels"""
+    with get_db() as conn:
+        rows = conn.execute("""
+            SELECT ct.*, p.slug as project_slug, p.name as project_name
+            FROM cloudflare_tunnels ct
+            LEFT JOIN projects p ON ct.project_id = p.id
+            ORDER BY ct.hostname
+        """).fetchall()
+        return [dict(row) for row in rows]
+
+@app.get("/api/stats/infrastructure")
+def get_infrastructure_stats():
+    """Get infrastructure overview statistics"""
+    with get_db() as conn:
+        total_servers = conn.execute("SELECT COUNT(*) as count FROM servers").fetchone()["count"]
+        total_deployments = conn.execute("SELECT COUNT(*) as count FROM deployments").fetchone()["count"]
+        total_tunnels = conn.execute("SELECT COUNT(*) as count FROM cloudflare_tunnels").fetchone()["count"]
+
+        # Servers by provider
+        providers = conn.execute("""
+            SELECT provider, COUNT(*) as count
+            FROM servers GROUP BY provider ORDER BY count DESC
+        """).fetchall()
+
+        # Deployments by environment
+        environments = conn.execute("""
+            SELECT environment, COUNT(*) as count
+            FROM deployments GROUP BY environment ORDER BY count DESC
+        """).fetchall()
+
+        # Projects by domain
+        domains = conn.execute("""
+            SELECT domain, COUNT(*) as count
+            FROM projects WHERE domain IS NOT NULL
+            GROUP BY domain ORDER BY count DESC
+        """).fetchall()
+
+        return {
+            "total_servers": total_servers,
+            "total_deployments": total_deployments,
+            "total_tunnels": total_tunnels,
+            "servers_by_provider": {p["provider"]: p["count"] for p in providers},
+            "deployments_by_environment": {e["environment"]: e["count"] for e in environments},
+            "projects_by_domain": {d["domain"]: d["count"] for d in domains}
+        }
+
 # Mount static files (must be last)
 app.mount("/", StaticFiles(directory="static", html=True), name="static")
 
 if __name__ == "__main__":
     import uvicorn
     print("\n" + "="*60)
-    print("🚀 Dev Log Admin Server")
+    print("Dev Log Admin Server v2.0.0")
+    print("  + Infrastructure Management APIs")
     print("="*60)
-    print("📊 Dashboard: http://localhost:8100")
-    print("📖 API Docs:  http://localhost:8100/docs")
+    print("Dashboard: http://localhost:8100")
+    print("API Docs:  http://localhost:8100/docs")
     print("="*60 + "\n")
     uvicorn.run(app, host="0.0.0.0", port=8100)

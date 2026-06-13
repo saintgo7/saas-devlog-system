@@ -37,3 +37,6 @@ ENV/
 
 # Logs
 *.log
+
+# Dev Log (HTML files are optional)
+# docs/html/*.html

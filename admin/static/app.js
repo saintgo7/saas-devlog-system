@@ -176,7 +176,24 @@ function reloadData() {
     }
 }
 
+// Load infrastructure stats for dashboard
+async function loadInfraStats() {
+    try {
+        const res = await fetch('/api/stats/infrastructure');
+        const stats = await res.json();
+
+        const serversEl = document.getElementById('totalServers');
+        if (serversEl) serversEl.textContent = stats.total_servers || 0;
+
+        const deploysEl = document.getElementById('totalDeployments');
+        if (deploysEl) deploysEl.textContent = stats.total_deployments || 0;
+    } catch (err) {
+        console.error('Failed to load infra stats:', err);
+    }
+}
+
 // Load on page load
 if (document.getElementById('projectsGrid')) {
     loadDashboard();
+    loadInfraStats();
 }

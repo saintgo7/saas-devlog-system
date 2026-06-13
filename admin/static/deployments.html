@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dev Log Admin - Deployments</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <h1>Deployments</h1>
+            <nav class="nav">
+                <a href="/" class="nav-link">Dashboard</a>
+                <a href="/search.html" class="nav-link">Search</a>
+                <a href="/infrastructure.html" class="nav-link">Infrastructure</a>
+                <a href="/deployments.html" class="nav-link active">Deployments</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-label">Total Deployments</div>
+                <div class="stat-value" id="totalDeploys">-</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Production</div>
+                <div class="stat-value" id="prodCount">-</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Staging</div>
+                <div class="stat-value" id="stagingCount">-</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Development</div>
+                <div class="stat-value" id="devCount">-</div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>Deployment Matrix</h2>
+            <div class="filter-bar" style="margin-bottom: 1rem;">
+                <button onclick="filterEnv('')" class="nav-link active" id="btn-all">All</button>
+                <button onclick="filterEnv('production')" class="nav-link" id="btn-production">Production</button>
+                <button onclick="filterEnv('staging')" class="nav-link" id="btn-staging">Staging</button>
+                <button onclick="filterEnv('development')" class="nav-link" id="btn-development">Development</button>
+            </div>
+            <div id="deploymentList" class="recent-list"></div>
+        </section>
+
+        <section class="section">
+            <h2>Domain Overview</h2>
+            <div id="domainChart" class="type-chart"></div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p>Dev Log Admin v2.0 | Deployment View</p>
+    </footer>
+
+    <script>
+    // Note: DOM manipulation uses safe methods (createElement/textContent).
+    // Data comes from our own trusted API backend (internal admin dashboard).
+    let allDeployments = [];
+
+    async function loadData() {
+        try {
+            const [deploymentsRes, statsRes] = await Promise.all([
+                fetch('/api/deployments'),
+                fetch('/api/stats/infrastructure')
+            ]);
+
+            allDeployments = await deploymentsRes.json();
+            const stats = await statsRes.json();
+
+            document.getElementById('totalDeploys').textContent = stats.total_deployments;
+            document.getElementById('prodCount').textContent = stats.deployments_by_environment?.production || 0;
+            document.getElementById('stagingCount').textContent = stats.deployments_by_environment?.staging || 0;
+            document.getElementById('devCount').textContent = stats.deployments_by_environment?.development || 0;
+
+            renderDeployments(allDeployments);
+            renderDomains(stats.projects_by_domain || {});
+        } catch (err) {
+            console.error('Failed to load deployment data:', err);
+        }
+    }
+
+    function filterEnv(env) {
+        document.querySelectorAll('.filter-bar .nav-link').forEach(b => b.classList.remove('active'));
+        document.getElementById(env ? 'btn-' + env : 'btn-all').classList.add('active');
+
+        const filtered = env ? allDeployments.filter(d => d.environment === env) : allDeployments;
+        renderDeployments(filtered);
+    }
+
+    const envColors = {
+        'production': 'type-feat',
+        'staging': 'type-fix',
+        'development': 'type-docs'
+    };
+
+    function renderDeployments(deployments) {
+        const container = document.getElementById('deploymentList');
+        container.textContent = '';
+
+        if (deployments.length === 0) {
+            const p = document.createElement('p');
+            p.textContent = 'No deployments found';
+            container.appendChild(p);
+            return;
+        }
+
+        deployments.forEach(d => {
+            const item = document.createElement('div');
+            item.className = 'recent-item';
+
+            const info = document.createElement('div');
+            info.className = 'recent-info';
+
+            const badge = document.createElement('span');
+            badge.className = 'type-badge ' + (envColors[d.environment] || '');
+            badge.textContent = d.environment;
+            info.appendChild(badge);
+
+            const name = document.createElement('strong');
+            name.textContent = d.project_name;
+            info.appendChild(name);
+
+            const server = document.createElement('span');
+            server.className = 'recent-project';
+            server.textContent = d.server_name + ' (' + d.server_provider + ')';
+            info.appendChild(server);
+
+            item.appendChild(info);
+
+            const date = document.createElement('div');
+            date.className = 'recent-date';
+            date.textContent = d.url || d.deploy_method || '-';
+            item.appendChild(date);
+
+            container.appendChild(item);
+        });
+    }
+
+    const domainColors = {
+        'abada': '#10b981', 'erp': '#3b82f6', 'travel': '#f59e0b',
+        'ai-bot': '#8b5cf6', 'email': '#06b6d4', 'healthcare': '#ef4444',
+        'web': '#64748b', 'devtools': '#84cc16', 'learning': '#d946ef', 'misc': '#6b7280'
+    };
+
+    function renderDomains(domains) {
+        const container = document.getElementById('domainChart');
+        container.textContent = '';
+
+        const entries = Object.entries(domains);
+        if (entries.length === 0) {
+            const p = document.createElement('p');
+            p.textContent = 'No domain data';
+            container.appendChild(p);
+            return;
+        }
+
+        entries.forEach(([domain, count]) => {
+            const color = domainColors[domain] || '#6b7280';
+            const width = Math.max(count * 5, 10);
+
+            const row = document.createElement('div');
+            row.style.cssText = 'display:flex;align-items:center;gap:0.5rem;margin-bottom:0.5rem;';
+
+            const label = document.createElement('span');
+            label.style.cssText = 'width:80px;text-align:right;font-size:0.85rem;';
+            label.textContent = domain;
+            row.appendChild(label);
+
+            const bar = document.createElement('div');
+            bar.style.cssText = 'background:' + color + ';height:24px;width:' + width + '%;border-radius:4px;display:flex;align-items:center;padding:0 8px;';
+
+            const countEl = document.createElement('span');
+            countEl.style.cssText = 'color:white;font-size:0.8rem;font-weight:600;';
+            countEl.textContent = count;
+            bar.appendChild(countEl);
+
+            row.appendChild(bar);
+            container.appendChild(row);
+        });
+    }
+
+    loadData();
+    </script>
+</body>
+</html>

@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dev Log Admin - Infrastructure</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <h1>Infrastructure</h1>
+            <nav class="nav">
+                <a href="/" class="nav-link">Dashboard</a>
+                <a href="/search.html" class="nav-link">Search</a>
+                <a href="/infrastructure.html" class="nav-link active">Infrastructure</a>
+                <a href="/deployments.html" class="nav-link">Deployments</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-label">Total Servers</div>
+                <div class="stat-value" id="totalServers">-</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">AWS</div>
+                <div class="stat-value" id="awsCount">-</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">On-Premise</div>
+                <div class="stat-value" id="onpremCount">-</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Tunnels</div>
+                <div class="stat-value" id="tunnelCount">-</div>
+            </div>
+        </section>
+
+        <section class="section" id="serverGroups">
+            <!-- Populated by JS -->
+        </section>
+
+        <section class="section">
+            <h2>Cloudflare Tunnels</h2>
+            <div id="tunnelList" class="recent-list">
+                <!-- Populated by JS -->
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p>Dev Log Admin v2.0 | Infrastructure View</p>
+    </footer>
+
+    <script>
+    // Note: innerHTML usage here is safe - data comes from our own trusted API backend,
+    // not from user input. This is an internal admin dashboard.
+    async function loadData() {
+        try {
+            const [serversRes, statsRes, tunnelsRes] = await Promise.all([
+                fetch('/api/servers'),
+                fetch('/api/stats/infrastructure'),
+                fetch('/api/tunnels')
+            ]);
+
+            const servers = await serversRes.json();
+            const stats = await statsRes.json();
+            const tunnels = await tunnelsRes.json();
+
+            // Stats
+            document.getElementById('totalServers').textContent = stats.total_servers;
+            document.getElementById('awsCount').textContent = stats.servers_by_provider?.aws || 0;
+            document.getElementById('onpremCount').textContent = stats.servers_by_provider?.['abada-onprem'] || 0;
+            document.getElementById('tunnelCount').textContent = stats.total_tunnels;
+
+            // Group servers by provider
+            const groups = {};
+            servers.forEach(s => {
+                const provider = s.provider || 'other';
+                if (!groups[provider]) groups[provider] = [];
+                groups[provider].push(s);
+            });
+
+            const providerNames = {
+                'aws': 'AWS (Tokyo)',
+                'abada-onprem': 'ABADA On-Premise (Seoul)',
+                'local': 'Local',
+                'other': 'Other'
+            };
+
+            const container = document.getElementById('serverGroups');
+            container.textContent = '';
+
+            for (const [provider, serverList] of Object.entries(groups)) {
+                const heading = document.createElement('h2');
+                heading.textContent = providerNames[provider] || provider;
+                container.appendChild(heading);
+
+                const grid = document.createElement('div');
+                grid.className = 'projects-grid';
+
+                serverList.forEach(s => {
+                    const card = document.createElement('div');
+                    card.className = 'project-card';
+
+                    const h3 = document.createElement('h3');
+                    h3.textContent = s.name;
+                    card.appendChild(h3);
+
+                    const desc = document.createElement('p');
+                    desc.className = 'project-desc';
+                    desc.textContent = s.purpose || '';
+                    card.appendChild(desc);
+
+                    const meta = document.createElement('div');
+                    meta.className = 'project-meta';
+
+                    const hostSpan = document.createElement('span');
+                    hostSpan.textContent = 'Host: ' + (s.host || '-');
+                    meta.appendChild(hostSpan);
+
+                    const sshSpan = document.createElement('span');
+                    sshSpan.textContent = 'SSH: ' + (s.ssh_alias || '-');
+                    meta.appendChild(sshSpan);
+
+                    const userSpan = document.createElement('span');
+                    userSpan.textContent = 'User: ' + (s.ssh_user || '-') + (s.ssh_port !== 22 ? ':' + s.ssh_port : '');
+                    meta.appendChild(userSpan);
+
+                    const statusSpan = document.createElement('span');
+                    statusSpan.className = s.status === 'active' ? 'type-feat' : 'type-fix';
+                    statusSpan.textContent = s.status;
+                    meta.appendChild(statusSpan);
+
+                    card.appendChild(meta);
+                    grid.appendChild(card);
+                });
+
+                container.appendChild(grid);
+            }
+
+            // Tunnels
+            const tunnelContainer = document.getElementById('tunnelList');
+            tunnelContainer.textContent = '';
+
+            if (tunnels.length === 0) {
+                const p = document.createElement('p');
+                p.textContent = 'No tunnels configured';
+                tunnelContainer.appendChild(p);
+            } else {
+                tunnels.forEach(t => {
+                    const item = document.createElement('div');
+                    item.className = 'recent-item';
+
+                    const info = document.createElement('div');
+                    info.className = 'recent-info';
+
+                    const badge = document.createElement('span');
+                    badge.className = 'type-badge type-feat';
+                    badge.textContent = t.environment || 'prod';
+                    info.appendChild(badge);
+
+                    const hostname = document.createElement('strong');
+                    hostname.textContent = t.hostname;
+                    info.appendChild(hostname);
+
+                    const project = document.createElement('span');
+                    project.className = 'recent-project';
+                    project.textContent = t.project_name || '-';
+                    info.appendChild(project);
+
+                    item.appendChild(info);
+
+                    const date = document.createElement('div');
+                    date.className = 'recent-date';
+                    date.textContent = t.service_url;
+                    item.appendChild(date);
+
+                    tunnelContainer.appendChild(item);
+                });
+            }
+
+        } catch (err) {
+            console.error('Failed to load infrastructure data:', err);
+        }
+    }
+
+    loadData();
+    </script>
+</body>
+</html>
