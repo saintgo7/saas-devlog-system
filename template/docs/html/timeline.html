@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Development Timeline - Dev Log System</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="scripts.js"></script>
+</head>
+<body>
+    <!-- Dark Mode Toggle -->
+    <button class="dark-mode-toggle" onclick="toggleDarkMode()" aria-label="Toggle Dark Mode">
+        <span id="darkModeIcon">🌙</span>
+        <span class="toggle-label" id="darkModeLabel">Dark</span>
+    </button>
+
+    <header class="page-header">
+        <div class="header-content">
+            <h1>Development Timeline</h1>
+            <p class="header-subtitle">시간순 개발 히스토리</p>
+        </div>
+        <nav class="stats-nav">
+            <a href="index.html" class="nav-link">Kanban Board</a>
+            <a href="timeline.html" class="nav-link active">Timeline</a>
+            <a href="heatmap.html" class="nav-link">Heatmap</a>
+            <a href="files.html" class="nav-link">Files</a>
+            <a href="commit-size.html" class="nav-link">Commit Size</a>
+            <a href="time-analysis.html" class="nav-link">Time Analysis</a>
+            <a href="deployment.html" class="nav-link">Deployment</a>
+            <a href="stats.html" class="nav-link">Statistics</a>
+        </nav>
+
+        <div class="stats-bar">
+            <div class="stat-item">
+                <span class="stat-label">Total Commits</span>
+                <span class="stat-value">12</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Files Changed</span>
+                <span class="stat-value">47</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Lines Added</span>
+                <span class="stat-value text-green">+2850</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Lines Deleted</span>
+                <span class="stat-value text-red">-420</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="timeline-container">
+        
+        <div class="timeline-date-group">
+            <div class="timeline-date-header">
+                <h2 class="timeline-date">2026-02-09 (월)</h2>
+                <span class="timeline-count">1 commits</span>
+            </div>
+            <div class="timeline-items">
+        
+    <div class="timeline-item" data-type="docs" data-log-index="11" onclick="openModal(11)">
+        <div class="timeline-marker" style="background-color: #3b82f6"></div>
+        <div class="timeline-content">
+            <div class="timeline-header">
+                <span class="timeline-number">#012</span>
+                <span class="timeline-type" style="background-color: #3b82f6">
+                    DOC Docs
+                </span>
+                <span class="timeline-time">2026-02-09 14:00</span>
+            </div>
+            <h3 class="timeline-title">Update README and deployment guide</h3>
+            <div class="timeline-meta">
+                <span class="meta-item">
+                    <span class="meta-label">Commit:</span> f2a3b4c
+                </span>
+                <span class="meta-item">
+                    <span class="meta-label">Changes:</span> 2 files,
+                    <span class="text-green">+90</span>
+                    <span class="text-red">-135</span>
+                </span>
+            </div>
+        </div>
+    </div>
+    
+            </div>
+        </div>
+        
+        <div class="timeline-date-group">
+            <div class="timeline-date-header">
+                <h2 class="timeline-date">2026-02-08 (일)</h2>
+                <span class="timeline-count">1 commits</span>
+            </div>
+            <div class="timeline-items">
+        
+    <div class="timeline-item" data-type="fix" data-log-index="10" onclick="openModal(10)">
+        <div class="timeline-marker" style="background-color: #ef4444"></div>
+        <div class="timeline-content">
+            <div class="timeline-header">
+                <span class="timeline-number">#011</span>
+                <span class="timeline-type" style="background-color: #ef4444">
+                    FIX Fixes
+                </span>
+                <span class="timeline-time">2026-02-08 09:30</span>
+            </div>
+            <h3 class="timeline-title">Fix email template rendering issue</h3>
+            <div class="timeline-meta">
+                <span class="meta-item">
+                    <span class="meta-label">Commit:</span> e1f2a3b
+                </span>
+                <span class="meta-item">
+                    <span class="meta-label">Changes:</span> 2 files,
+                    <span class="text-green">+60</span>
+                    <span class="text-red">-35</span>
+                </span>
+            </div>
+        </div>
+    </div>
+    
+            </div>
+        </div>
+        
+        <div class="timeline-date-group">
+            <div class="timeline-date-header">
+                <h2 class="timeline-date">2026-02-07 (토)</h2>
+                <span class="timeline-count">1 commits</span>
+            </div>
+            <div class="timeline-items">
+        
+    <div class="timeline-item" data-type="feat" data-log-index="9" onclick="openModal(9)">
+        <div class="timeline-marker" style="background-color: #10b981"></div>
+        <div class="timeline-content">
+            <div class="timeline-header">
+                <span class="timeline-number">#010</span>
+                <span class="timeline-type" style="background-color: #10b981">
+                    NEW Features
+                </span>
+                <span class="timeline-time">2026-02-07 11:00</span>
+            </div>
+            <h3 class="timeline-title">Add notification system</h3>
+            <div class="timeline-meta">
+                <span class="meta-item">
+                    <span class="meta-label">Commit:</span> d0e1f2a
+                </span>
+                <span class="meta-item">
+                    <span class="meta-label">Changes:</span> 5 files,
+                    <span class="text-green">+350</span>
+                    <span class="text-red">-15</span>
+                </span>
+            </div>
+        </div>
+    </div>
+    
+            </div>
+        </div>
+        
+        <div class="timeline-date-group">
+            <div class="timeline-date-header">
+                <h2 class="timeline-date">2026-02-06 (금)</h2>
+                <span class="timeline-count">2 commits</span>
+            </div>
+            <div class="timeline-items">
+        
+    <div class="timeline-item" data-type="refactor" data-log-index="8" onclick="openModal(8)">
+        <div class="timeline-marker" style="background-color: #8b5cf6"></div>
+        <div class="timeline-content">
+            <div class="timeline-header">
+                <span class="timeline-number">#009</span>
+                <span class="timeline-type" style="background-color: #8b5cf6">
+                    REF Refactor
+                </span>
+                <span class="timeline-time">2026-02-06 16:00</span>
+            </div>
+            <h3 class="timeline-title">Refactor database connection pooling</h3>
+            <div class="timeline-meta">
+                <span class="meta-item">
+                    <span class="meta-label">Commit:</span> c9d0e1f
+                </span>
+                <span class="meta-item">
+                    <span class="meta-label">Changes:</span> 3 files,
+                    <span class="text-green">+120</span>
+                    <span class="text-red">-95</span>
+                </span>
+            </div>
+        </div>
+    </div>
+    
+    <div class="timeline-item" data-type="fix" data-log-index="7" onclick="openModal(7)">
+        <div class="timeline-marker" style="background-color: #ef4444"></div>
+        <div class="timeline-content">
+            <div class="timeline-header">
+                <span class="timeline-number">#008</span>
+                <span class="timeline-type" style="background-color: #ef4444">
+                    FIX Fixes
+                </span>
+                <span class="timeline-time">2026-02-06 10:45</span>
+            </div>
+            <h3 class="timeline-title">Fix chart rendering on mobile devices</h3>
+            <div class="timeline-meta">
+                <span class="meta-item">
+                    <span class="meta-label">Commit:</span> b8c9d0e
+                </span>
+                <span class="meta-item">
+                    <span class="meta-label">Changes:</span> 3 files,
+                    <span class="text-green">+85</span>
+                    <span class="text-red">-40</span>
+                </span>
+            </div>
+        </div>
+    </div>
+    
+            </div>
+        </div>
+        
+        <div class="timeline-date-group">
+            <div class="timeline-date-header">
+                <h2 class="timeline-date">2026-02-05 (목)</h2>
+                <span class="timeline-count">1 commits</span>
+            </div>
+            <div class="timeline-items">
+        
+    <div class="timeline-item" data-type="feat" data-log-index="6" onclick="openModal(6)">
+        <div class="timeline-marker" style="background-color: #10b981"></div>
+        <div class="timeline-content">
+            <div class="timeline-header">
+                <span class="timeline-number">#007</span>
+                <span class="timeline-type" style="background-color: #10b981">
+                    NEW Features
+                </span>
+                <span class="timeline-time">2026-02-05 13:30</span>
+            </div>
+            <h3 class="timeline-title">Implement data export feature</h3>
+            <div class="timeline-meta">
+                <span class="meta-item">
+                    <span class="meta-label">Commit:</span> a7b8c9d
+                </span>
+                <span class="meta-item">
+                    <span class="meta-label">Changes:</span> 4 files,
+                    <span class="text-green">+320</span>
+                    <span class="text-red">-25</span>
+                </span>
+            </div>
+        </div>
+    </div>
+    
+            </div>
+        </div>
+        
+        <div class="timeline-date-group">
+            <div class="timeline-date-header">
+                <h2 class="timeline-date">2026-02-04 (수)</h2>
+                <span class="timeline-count">1 commits</span>
+            </div>
+            <div class="timeline-items">
+        
+    <div class="timeline-item" data-type="ci" data-log-index="5" onclick="openModal(5)">
+        <div class="timeline-marker" style="background-color: #06b6d4"></div>
+        <div class="timeline-content">
+            <div class="timeline-header">
+                <span class="timeline-number">#006</span>
+                <span class="timeline-type" style="background-color: #06b6d4">
+                    CI CI/CD
+                </span>
+                <span class="timeline-time">2026-02-04 09:00</span>
+            </div>
+            <h3 class="timeline-title">Setup CI/CD pipeline with GitHub Actions</h3>
+            <div class="timeline-meta">
+                <span class="meta-item">
+                    <span class="meta-label">Commit:</span> f6a7b8c
+                </span>
+                <span class="meta-item">
+                    <span class="meta-label">Changes:</span> 3 files,
+                    <span class="text-green">+150</span>
+                    <span class="text-red">-0</span>
+                </span>
+            </div>
+        </div>
+    </div>
+    
+            </div>
+        </div>
+        
+        <div class="timeline-date-group">
+            <div class="timeline-date-header">
+                <h2 class="timeline-date">2026-02-03 (화)</h2>
+                <span class="timeline-count">2 commits</span>
+            </div>
+            <div class="timeline-items">
+        
+    <div class="timeline-item" data-type="docs" data-log-index="4" onclick="openModal(4)">
+        <div class="timeline-marker" style="background-color: #3b82f6"></div>
+        <div class="timeline-content">
+            <div class="timeline-header">
+                <span class="timeline-number">#005</span>
+                <span class="timeline-type" style="background-color: #3b82f6">
+                    DOC Docs
+                </span>
+                <span class="timeline-time">2026-02-03 15:45</span>
+            </div>
+            <h3 class="timeline-title">Add API documentation with Swagger</h3>
+            <div class="timeline-meta">
+                <span class="meta-item">
+                    <span class="meta-label">Commit:</span> e5f6a7b
+                </span>
+                <span class="meta-item">
+                    <span class="meta-label">Changes:</span> 4 files,
+                    <span class="text-green">+280</span>
+                    <span class="text-red">-10</span>
+                </span>
+            </div>
+        </div>
+    </div>
+    
+    <div class="timeline-item" data-type="fix" data-log-index="3" onclick="openModal(3)">
+        <div class="timeline-marker" style="background-color: #ef4444"></div>
+        <div class="timeline-content">
+            <div class="timeline-header">
+                <span class="timeline-number">#004</span>
+                <span class="timeline-type" style="background-color: #ef4444">
+                    FIX Fixes
+                </span>
+                <span class="timeline-time">2026-02-03 11:15</span>
+            </div>
+            <h3 class="timeline-title">Fix login token refresh bug</h3>
+            <div class="timeline-meta">
+                <span class="meta-item">
+                    <span class="meta-label">Commit:</span> d4e5f6a
+                </span>
+                <span class="meta-item">
+                    <span class="meta-label">Changes:</span> 2 files,
+                    <span class="text-green">+45</span>
+                    <span class="text-red">-20</span>
+                </span>
+            </div>
+        </div>
+    </div>
+    
+            </div>
+        </div>
+        
+        <div class="timeline-date-group">
+            <div class="timeline-date-header">
+                <h2 class="timeline-date">2026-02-02 (월)</h2>
+                <span class="timeline-count">1 commits</span>
+            </div>
+            <div class="timeline-items">
+        
+    <div class="timeline-item" data-type="feat" data-log-index="2" onclick="openModal(2)">
+        <div class="timeline-marker" style="background-color: #10b981"></div>
+        <div class="timeline-content">
+            <div class="timeline-header">
+                <span class="timeline-number">#003</span>
+                <span class="timeline-type" style="background-color: #10b981">
+                    NEW Features
+                </span>
+                <span class="timeline-time">2026-02-02 10:00</span>
+            </div>
+            <h3 class="timeline-title">Implement dashboard UI components</h3>
+            <div class="timeline-meta">
+                <span class="meta-item">
+                    <span class="meta-label">Commit:</span> c3d4e5f
+                </span>
+                <span class="meta-item">
+                    <span class="meta-label">Changes:</span> 6 files,
+                    <span class="text-green">+520</span>
+                    <span class="text-red">-30</span>
+                </span>
+            </div>
+        </div>
+    </div>
+    
+            </div>
+        </div>
+        
+        <div class="timeline-date-group">
+            <div class="timeline-date-header">
+                <h2 class="timeline-date">2026-02-01 (일)</h2>
+                <span class="timeline-count">2 commits</span>
+            </div>
+            <div class="timeline-items">
+        
+    <div class="timeline-item" data-type="feat" data-log-index="1" onclick="openModal(1)">
+        <div class="timeline-marker" style="background-color: #10b981"></div>
+        <div class="timeline-content">
+            <div class="timeline-header">
+                <span class="timeline-number">#002</span>
+                <span class="timeline-type" style="background-color: #10b981">
+                    NEW Features
+                </span>
+                <span class="timeline-time">2026-02-01 14:20</span>
+            </div>
+            <h3 class="timeline-title">Add user authentication module</h3>
+            <div class="timeline-meta">
+                <span class="meta-item">
+                    <span class="meta-label">Commit:</span> b2c3d4e
+                </span>
+                <span class="meta-item">
+                    <span class="meta-label">Changes:</span> 5 files,
+                    <span class="text-green">+380</span>
+                    <span class="text-red">-15</span>
+                </span>
+            </div>
+        </div>
+    </div>
+    
+    <div class="timeline-item" data-type="feat" data-log-index="0" onclick="openModal(0)">
+        <div class="timeline-marker" style="background-color: #10b981"></div>
+        <div class="timeline-content">
+            <div class="timeline-header">
+                <span class="timeline-number">#001</span>
+                <span class="timeline-type" style="background-color: #10b981">
+                    NEW Features
+                </span>
+                <span class="timeline-time">2026-02-01 09:30</span>
+            </div>
+            <h3 class="timeline-title">Initialize project structure and setup</h3>
+            <div class="timeline-meta">
+                <span class="meta-item">
+                    <span class="meta-label">Commit:</span> a1b2c3d
+                </span>
+                <span class="meta-item">
+                    <span class="meta-label">Changes:</span> 8 files,
+                    <span class="text-green">+450</span>
+                    <span class="text-red">-0</span>
+                </span>
+            </div>
+        </div>
+    </div>
+    
+            </div>
+        </div>
+        
+    </main>
+
+    <footer class="page-footer">
+        <p>Generated at 2026-02-09 15:00:00 | Dev Log System</p>
+        <p><a href="https://github.com/example/dev-log-system" target="_blank">https://github.com/example/dev-log-system</a></p>
+    </footer>
+
+    <!-- Modal -->
+    <div id="detailModal" class="modal" onclick="closeModal(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <h2 id="modalTitle"></h2>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="modalBody" class="markdown-content"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Set global logsData for modal (used by scripts.js)
+        window.logsData = [{"log_number": "001", "title": "Initialize project structure and setup", "type": "feat", "date": "2026-02-01 09:30:00", "commit": "a1b2c3d4e5f6", "files_changed": 8, "lines_added": 450, "lines_deleted": 0, "details": ["Create project scaffolding", "Add package.json and configs", "Setup development environment"], "full_content": "# Dev Log #001: Initialize project structure\n\n## Changes\n- Created project directory structure\n- Added package.json with dependencies\n- Setup ESLint and Prettier configs\n\n## Files Changed\n| Status | File |\n|--------|------|\n| `+` | `package.json` |\n| `+` | `src/index.ts` |\n| `+` | `.eslintrc.js` |\n| `+` | `tsconfig.json` |\n| `+` | `src/app/main.ts` |\n| `+` | `src/components/App.tsx` |\n| `+` | `.prettierrc` |\n| `+` | `README.md` |"}, {"log_number": "002", "title": "Add user authentication module", "type": "feat", "date": "2026-02-01 14:20:00", "commit": "b2c3d4e5f6a7", "files_changed": 5, "lines_added": 380, "lines_deleted": 15, "details": ["JWT token management", "Login/Logout endpoints", "Auth middleware"], "full_content": "# Dev Log #002: User Authentication\n\n## Changes\n- Implemented JWT authentication\n- Added login/logout API endpoints\n- Created auth middleware\n\n## Files Changed\n| Status | File |\n|--------|------|\n| `+` | `src/api/auth.ts` |\n| `+` | `src/middleware/auth.ts` |\n| `~` | `src/app/main.ts` |\n| `+` | `src/components/Login.tsx` |\n| `+` | `server/routes/auth.py` |"}, {"log_number": "003", "title": "Implement dashboard UI components", "type": "feat", "date": "2026-02-02 10:00:00", "commit": "c3d4e5f6a7b8", "files_changed": 6, "lines_added": 520, "lines_deleted": 30, "details": ["Dashboard layout", "Chart components", "Responsive design"], "full_content": "# Dev Log #003: Dashboard UI\n\n## Changes\n- Built main dashboard layout\n- Added Chart.js integration\n- Implemented responsive grid system\n\n## Files Changed\n| Status | File |\n|--------|------|\n| `+` | `src/components/Dashboard.tsx` |\n| `+` | `src/components/Chart.tsx` |\n| `+` | `styles/dashboard.css` |\n| `~` | `src/app/main.ts` |\n| `+` | `src/components/Sidebar.tsx` |\n| `+` | `src/components/Header.tsx` |"}, {"log_number": "004", "title": "Fix login token refresh bug", "type": "fix", "date": "2026-02-03 11:15:00", "commit": "d4e5f6a7b8c9", "files_changed": 2, "lines_added": 45, "lines_deleted": 20, "details": ["Token expiry handling", "Auto-refresh logic fix"], "full_content": "# Dev Log #004: Token Refresh Bug Fix\n\n## Problem\nToken refresh was failing silently when the refresh token expired.\n\n## Solution\n- Added proper error handling for expired refresh tokens\n- Redirect to login page on refresh failure\n\n## Files Changed\n| Status | File |\n|--------|------|\n| `~` | `src/api/auth.ts` |\n| `~` | `src/middleware/auth.ts` |"}, {"log_number": "005", "title": "Add API documentation with Swagger", "type": "docs", "date": "2026-02-03 15:45:00", "commit": "e5f6a7b8c9d0", "files_changed": 4, "lines_added": 280, "lines_deleted": 10, "details": ["Swagger/OpenAPI setup", "Endpoint documentation", "Example requests/responses"], "full_content": "# Dev Log #005: API Documentation\n\n## Changes\n- Integrated Swagger UI\n- Documented all API endpoints\n- Added request/response examples\n\n## Files Changed\n| Status | File |\n|--------|------|\n| `+` | `docs/api/swagger.yaml` |\n| `~` | `server/routes/auth.py` |\n| `+` | `docs/api/README.md` |\n| `~` | `server/app.py` |"}, {"log_number": "006", "title": "Setup CI/CD pipeline with GitHub Actions", "type": "ci", "date": "2026-02-04 09:00:00", "commit": "f6a7b8c9d0e1", "files_changed": 3, "lines_added": 150, "lines_deleted": 0, "details": ["Build workflow", "Test automation", "Deploy to staging"], "full_content": "# Dev Log #006: CI/CD Pipeline\n\n## Changes\n- Created GitHub Actions workflow\n- Added automated test runner\n- Setup staging deployment\n\n## Files Changed\n| Status | File |\n|--------|------|\n| `+` | `.github/workflows/ci.yml` |\n| `+` | `.github/workflows/deploy.yml` |\n| `+` | `docker-compose.yml` |"}, {"log_number": "007", "title": "Implement data export feature", "type": "feat", "date": "2026-02-05 13:30:00", "commit": "a7b8c9d0e1f2", "files_changed": 4, "lines_added": 320, "lines_deleted": 25, "details": ["CSV export", "JSON export", "Date range filter"], "full_content": "# Dev Log #007: Data Export\n\n## Changes\n- Added CSV/JSON export functionality\n- Implemented date range filtering for exports\n- Added download button to dashboard\n\n## Files Changed\n| Status | File |\n|--------|------|\n| `+` | `src/api/export.ts` |\n| `+` | `src/components/ExportButton.tsx` |\n| `~` | `src/components/Dashboard.tsx` |\n| `+` | `server/routes/export.py` |"}, {"log_number": "008", "title": "Fix chart rendering on mobile devices", "type": "fix", "date": "2026-02-06 10:45:00", "commit": "b8c9d0e1f2a3", "files_changed": 3, "lines_added": 85, "lines_deleted": 40, "details": ["Responsive chart sizing", "Touch event handling", "Viewport detection"], "full_content": "# Dev Log #008: Mobile Chart Fix\n\n## Problem\nCharts were not rendering correctly on mobile devices due to viewport issues.\n\n## Solution\n- Added responsive breakpoints for chart containers\n- Fixed touch event handling for tooltips\n- Added viewport detection for chart resizing\n\n## Files Changed\n| Status | File |\n|--------|------|\n| `~` | `src/components/Chart.tsx` |\n| `~` | `styles/dashboard.css` |\n| `~` | `src/components/Dashboard.tsx` |"}, {"log_number": "009", "title": "Refactor database connection pooling", "type": "refactor", "date": "2026-02-06 16:00:00", "commit": "c9d0e1f2a3b4", "files_changed": 3, "lines_added": 120, "lines_deleted": 95, "details": ["Connection pool optimization", "Query timeout handling", "Error recovery"], "full_content": "# Dev Log #009: DB Connection Refactor\n\n## Changes\n- Optimized connection pool settings\n- Added query timeout handling\n- Improved error recovery for lost connections\n\n## Files Changed\n| Status | File |\n|--------|------|\n| `~` | `server/database.py` |\n| `~` | `server/app.py` |\n| `+` | `server/db_pool.py` |"}, {"log_number": "010", "title": "Add notification system", "type": "feat", "date": "2026-02-07 11:00:00", "commit": "d0e1f2a3b4c5", "files_changed": 5, "lines_added": 350, "lines_deleted": 15, "details": ["Email notifications", "In-app alerts", "Notification preferences"], "full_content": "# Dev Log #010: Notification System\n\n## Changes\n- Implemented email notification service\n- Added in-app alert components\n- Created notification preferences page\n\n## Files Changed\n| Status | File |\n|--------|------|\n| `+` | `server/services/notification.py` |\n| `+` | `src/components/Notifications.tsx` |\n| `+` | `src/components/NotificationPrefs.tsx` |\n| `~` | `src/components/Header.tsx` |\n| `+` | `server/routes/notifications.py` |"}, {"log_number": "011", "title": "Fix email template rendering issue", "type": "fix", "date": "2026-02-08 09:30:00", "commit": "e1f2a3b4c5d6", "files_changed": 2, "lines_added": 60, "lines_deleted": 35, "details": ["HTML email template fix", "Inline CSS generation"], "full_content": "# Dev Log #011: Email Template Fix\n\n## Problem\nEmail templates were not rendering properly in Outlook and Gmail.\n\n## Solution\n- Converted CSS to inline styles\n- Fixed table layout for Outlook compatibility\n\n## Files Changed\n| Status | File |\n|--------|------|\n| `~` | `server/services/notification.py` |\n| `~` | `server/templates/email.html` |"}, {"log_number": "012", "title": "Update README and deployment guide", "type": "docs", "date": "2026-02-09 14:00:00", "commit": "f2a3b4c5d6e7", "files_changed": 2, "lines_added": 90, "lines_deleted": 135, "details": ["Installation guide update", "API reference update", "Deployment instructions"], "full_content": "# Dev Log #012: Documentation Update\n\n## Changes\n- Updated installation guide with new dependencies\n- Refreshed API reference documentation\n- Added deployment instructions for production\n\n## Files Changed\n| Status | File |\n|--------|------|\n| `~` | `README.md` |\n| `~` | `docs/api/README.md` |"}];
+    </script>
+</body>
+</html>

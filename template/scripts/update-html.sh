@@ -16,7 +16,7 @@ echo "━━━━━━━━━━━━━━━━━━━━━━━━�
 echo ""
 
 # Step 1: Parse dev-logs
-echo "Step 1/2: Parsing dev-log files..."
+echo "Step 1/9: Parsing dev-log files..."
 python3 "$SCRIPT_DIR/parse-devlog.py"
 
 if [ $? -ne 0 ]; then
@@ -27,7 +27,7 @@ fi
 echo ""
 
 # Step 2: Generate HTML
-echo "Step 2/5: Generating HTML..."
+echo "Step 2/9: Generating HTML..."
 python3 "$SCRIPT_DIR/generate-html.py"
 
 if [ $? -ne 0 ]; then
@@ -38,7 +38,7 @@ fi
 echo ""
 
 # Step 3: Generate Timeline
-echo "Step 3/5: Generating Timeline..."
+echo "Step 3/9: Generating Timeline..."
 python3 "$SCRIPT_DIR/generate-timeline.py"
 
 if [ $? -ne 0 ]; then
@@ -49,7 +49,7 @@ fi
 echo ""
 
 # Step 4: Generate Heatmap
-echo "Step 4/6: Generating Heatmap..."
+echo "Step 4/9: Generating Heatmap..."
 python3 "$SCRIPT_DIR/generate-heatmap.py"
 
 if [ $? -ne 0 ]; then
@@ -60,7 +60,7 @@ fi
 echo ""
 
 # Step 5: Generate Files History
-echo "Step 5/8: Generating Files History..."
+echo "Step 5/9: Generating Files History..."
 python3 "$SCRIPT_DIR/generate-files-history.py"
 
 if [ $? -ne 0 ]; then
@@ -71,7 +71,7 @@ fi
 echo ""
 
 # Step 6: Generate Commit Size Analysis
-echo "Step 6/8: Generating Commit Size Analysis..."
+echo "Step 6/9: Generating Commit Size Analysis..."
 python3 "$SCRIPT_DIR/generate-commit-size.py"
 
 if [ $? -ne 0 ]; then
@@ -82,7 +82,7 @@ fi
 echo ""
 
 # Step 7: Generate Time Analysis
-echo "Step 7/8: Generating Time Analysis..."
+echo "Step 7/9: Generating Time Analysis..."
 python3 "$SCRIPT_DIR/generate-time-analysis.py"
 
 if [ $? -ne 0 ]; then

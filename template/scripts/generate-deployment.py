@@ -11,6 +11,20 @@ from typing import Dict, List
 from collections import defaultdict
 
 
+def load_project_config(project_root: Path) -> Dict:
+    """Load project configuration from project.json"""
+    config_file = project_root / 'docs' / 'html' / 'data' / 'project.json'
+    defaults = {'name': 'Project', 'description': 'Development Log', 'url': ''}
+    if config_file.exists():
+        try:
+            with open(config_file, 'r', encoding='utf-8') as f:
+                config = json.load(f)
+            return {**defaults, **config}
+        except Exception:
+            pass
+    return defaults
+
+
 def get_deployment_logs(logs: List[Dict]) -> List[Dict]:
     """Get deployment-related logs (CI/CD commits)"""
     deployment_logs = []
@@ -57,7 +71,7 @@ def parse_date(date_str: str) -> datetime:
     for fmt in ['%Y-%m-%d %H:%M:%S', '%Y-%m-%d %H:%M']:
         try:
             return datetime.strptime(date_str, fmt)
-        except:
+        except (ValueError, TypeError):
             continue
     return datetime.now()
 
@@ -99,6 +113,13 @@ def generate_html(data: Dict) -> str:
     logs = data['logs']
     generated_at = data.get('generated_at', '')
 
+    # Load project config
+    project_root = Path(__file__).parent.parent
+    config = load_project_config(project_root)
+    project_name = config['name']
+    project_url = config.get('url', '')
+    footer_url = f'<p><a href="{project_url}" target="_blank">{project_url}</a></p>' if project_url else ''
+
     # Get deployment logs
     deployment_logs = get_deployment_logs(logs)
 
@@ -112,9 +133,8 @@ def generate_html(data: Dict) -> str:
     frequency = analyze_deployment_frequency(deployment_logs)
 
     # Prepare data for JavaScript
-    import json as json_module
-    deployment_logs_json = json_module.dumps(deployment_logs, ensure_ascii=False)
-    categories_json = json_module.dumps({
+    deployment_logs_json = json.dumps(deployment_logs, ensure_ascii=False)
+    categories_json = json.dumps({
         'hotfix': len(deployment_categories['hotfix']),
         'ci-config': len(deployment_categories['ci-config']),
         'infrastructure': len(deployment_categories['infrastructure']),
@@ -126,10 +146,11 @@ def generate_html(data: Dict) -> str:
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Deployment History - PamOut</title>
+    <title>Deployment History - {project_name}</title>
     <link rel="stylesheet" href="styles.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="scripts.js"></script>
 </head>
 <body>
     <!-- Dark Mode Toggle -->
@@ -183,7 +204,7 @@ def generate_html(data: Dict) -> str:
                 <div class="info-content">
                     <div class="info-item">
                         <span class="info-label">URL:</span>
-                        <a href="https://ws.abada.co.kr" target="_blank">https://ws.abada.co.kr</a>
+                        {'<a href="' + project_url + '" target="_blank">' + project_url + '</a>' if project_url else '<span>Not configured</span>'}
                     </div>
                     <div class="info-item">
                         <span class="info-label">Trigger:</span>
@@ -322,8 +343,8 @@ def generate_html(data: Dict) -> str:
     </main>
 
     <footer class="page-footer">
-        <p>Generated at {generated_at} | PamOut Workstation Manager</p>
-        <p><a href="https://ws.abada.co.kr" target="_blank">https://ws.abada.co.kr</a></p>
+        <p>Generated at {generated_at} | {project_name}</p>
+        {footer_url}
     </footer>
 
     <script>
@@ -356,23 +377,6 @@ def generate_html(data: Dict) -> str:
             }}
         }});
 
-        // Dark Mode Toggle
-        function toggleDarkMode() {{
-            document.body.classList.toggle('dark-mode');
-            const isDark = document.body.classList.contains('dark-mode');
-            const icon = document.getElementById('darkModeIcon');
-            const label = document.getElementById('darkModeLabel');
-            icon.textContent = isDark ? '☀️' : '🌙';
-            label.textContent = isDark ? 'Light' : 'Dark';
-            localStorage.setItem('darkMode', isDark ? 'enabled' : 'disabled');
-        }}
-
-        // Load dark mode preference
-        if (localStorage.getItem('darkMode') === 'enabled') {{
-            document.body.classList.add('dark-mode');
-            document.getElementById('darkModeIcon').textContent = '☀️';
-            document.getElementById('darkModeLabel').textContent = 'Light';
-        }}
     </script>
 </body>
 </html>'''

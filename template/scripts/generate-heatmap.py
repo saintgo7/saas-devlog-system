@@ -11,12 +11,26 @@ from typing import Dict, List
 from collections import defaultdict
 
 
+def load_project_config(project_root: Path) -> Dict:
+    """Load project configuration from project.json"""
+    config_file = project_root / 'docs' / 'html' / 'data' / 'project.json'
+    defaults = {'name': 'Project', 'description': 'Development Log', 'url': ''}
+    if config_file.exists():
+        try:
+            with open(config_file, 'r', encoding='utf-8') as f:
+                config = json.load(f)
+            return {**defaults, **config}
+        except Exception:
+            pass
+    return defaults
+
+
 def get_date_only(date_str: str) -> str:
     """Get date only (YYYY-MM-DD)"""
     try:
         dt = datetime.strptime(date_str, '%Y-%m-%d %H:%M:%S')
         return dt.strftime('%Y-%m-%d')
-    except:
+    except (ValueError, TypeError):
         return date_str.split()[0] if ' ' in date_str else date_str
 
 
@@ -38,7 +52,7 @@ def get_date_range(logs: List[Dict]) -> tuple:
         if date_str:
             try:
                 dates.append(datetime.strptime(date_str, '%Y-%m-%d'))
-            except:
+            except (ValueError, TypeError):
                 pass
 
     if not dates:
@@ -74,7 +88,6 @@ def generate_heatmap_grid(commits_by_date: Dict[str, int], start_date: datetime,
 
     # Month labels
     grid_html += '<div class="heatmap-months">'
-    current_date = start_date
     for week in range(weeks_needed):
         week_start = start_date + timedelta(days=week * 7)
         if week == 0 or week_start.day <= 7:
@@ -180,6 +193,13 @@ def generate_html(data: Dict) -> str:
     logs = data['logs']
     generated_at = data.get('generated_at', '')
 
+    # Load project config
+    project_root = Path(__file__).parent.parent
+    config = load_project_config(project_root)
+    project_name = config['name']
+    project_url = config.get('url', '')
+    footer_url = f'<p><a href="{project_url}" target="_blank">{project_url}</a></p>' if project_url else ''
+
     # Get date range
     start_date, end_date = get_date_range(logs)
 
@@ -201,8 +221,9 @@ def generate_html(data: Dict) -> str:
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Activity Heatmap - PamOut</title>
+    <title>Activity Heatmap - {project_name}</title>
     <link rel="stylesheet" href="styles.css">
+    <script src="scripts.js"></script>
 </head>
 <body>
     <!-- Dark Mode Toggle -->
@@ -223,6 +244,7 @@ def generate_html(data: Dict) -> str:
             <a href="files.html" class="nav-link">Files</a>
             <a href="commit-size.html" class="nav-link">Commit Size</a>
             <a href="time-analysis.html" class="nav-link">Time Analysis</a>
+            <a href="deployment.html" class="nav-link">Deployment</a>
             <a href="stats.html" class="nav-link">Statistics</a>
         </nav>
     </header>
@@ -282,7 +304,7 @@ def generate_html(data: Dict) -> str:
                     <div class="top-day-count">{count} commits</div>
                 </div>
             '''
-        except:
+        except (ValueError, TypeError):
             pass
 
     html += f'''
@@ -291,8 +313,8 @@ def generate_html(data: Dict) -> str:
     </main>
 
     <footer class="page-footer">
-        <p>Generated at {generated_at} | PamOut Workstation Manager</p>
-        <p><a href="https://ws.abada.co.kr" target="_blank">https://ws.abada.co.kr</a></p>
+        <p>Generated at {generated_at} | {project_name}</p>
+        {footer_url}
     </footer>
 
     <script>
@@ -301,30 +323,10 @@ def generate_html(data: Dict) -> str:
             cell.addEventListener('mouseenter', function(e) {{
                 const date = this.dataset.date;
                 const count = this.dataset.count;
-                const title = this.getAttribute('title');
-
-                // You can add custom tooltip here if needed
-                console.log(title);
+                // Native title attribute provides tooltip
             }});
         }});
 
-        // Dark Mode Toggle
-        function toggleDarkMode() {{
-            document.body.classList.toggle('dark-mode');
-            const isDark = document.body.classList.contains('dark-mode');
-            const icon = document.getElementById('darkModeIcon');
-            const label = document.getElementById('darkModeLabel');
-            icon.textContent = isDark ? '☀️' : '🌙';
-            label.textContent = isDark ? 'Light' : 'Dark';
-            localStorage.setItem('darkMode', isDark ? 'enabled' : 'disabled');
-        }}
-
-        // Load dark mode preference
-        if (localStorage.getItem('darkMode') === 'enabled') {{
-            document.body.classList.add('dark-mode');
-            document.getElementById('darkModeIcon').textContent = '☀️';
-            document.getElementById('darkModeLabel').textContent = 'Light';
-        }}
     </script>
 </body>
 </html>'''

@@ -65,7 +65,7 @@ INSERT INTO workstations (
     'Database Server',
     'linux',
     'Ubuntu 20.04 LTS',
-    'maintenance',
+    'offline',
     '192.168.1.104',
     '00:11:22:33:44:04',
     'Server Room - Rack A',

@@ -53,7 +53,7 @@ mkdir -p scripts
 
 # 파일 복사
 echo "📋 Copying files..."
-TEMPLATE_DIR=~/dev-log-template
+TEMPLATE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # Scripts
 cp "$TEMPLATE_DIR"/scripts/parse-devlog.py scripts/
@@ -79,12 +79,41 @@ cat > docs/html/data/dev-logs.json << EOF
 {
   "statistics": {
     "total_logs": 0,
-    "logs_by_type": {}
+    "total_files_changed": 0,
+    "total_lines_added": 0,
+    "total_lines_deleted": 0,
+    "by_type": {},
+    "categories": {
+      "frontend": 0,
+      "backend": 0,
+      "docs": 0,
+      "config": 0,
+      "other": 0
+    }
   },
   "logs": [],
   "generated_at": "$(date '+%Y-%m-%d %H:%M:%S')"
 }
 EOF
+
+# 프로젝트 설정 파일 생성
+echo "📄 Creating project.json..."
+python3 << PYCONFIG
+import json
+
+tech_list = [t.strip() for t in '$TECH_STACK'.split(',') if t.strip()]
+config = {
+    'name': '$PROJECT_DISPLAY_NAME',
+    'description': '$PROJECT_DESC',
+    'url': '$REPO_URL',
+    'tech_stack': tech_list
+}
+
+with open('docs/html/data/project.json', 'w', encoding='utf-8') as f:
+    json.dump(config, f, ensure_ascii=False, indent=2)
+
+print('   Created: docs/html/data/project.json')
+PYCONFIG
 
 # README 생성
 echo "📝 Creating README..."
@@ -152,7 +181,7 @@ fi
 # 통합 어드민에 추가
 echo ""
 echo "🔗 Adding to dev-log-admin..."
-ADMIN_CONFIG=~/dev-log-admin/config.json
+ADMIN_CONFIG=~/saas-devlog-system/admin/config.json
 
 if [ -f "$ADMIN_CONFIG" ]; then
     # Python으로 JSON 업데이트
@@ -178,8 +207,8 @@ if not existing:
         'name': '$PROJECT_DISPLAY_NAME',
         'description': '$PROJECT_DESC',
         'repository_url': '$REPO_URL',
-        'tech_stack': ['$TECH_STACK'.replace(',', '","').strip() for item in '$TECH_STACK'.split(',') if item.strip()],
-        'json_path': project_dir + '/docs/html/data/dev-logs.json',
+        'tech_stack': [item.strip() for item in '$TECH_STACK'.split(',') if item.strip()],
+        'json_path': project_dir.replace(os.path.expanduser('~'), '~') + '/docs/html/data/dev-logs.json',
         'html_url': 'file://' + project_dir + '/docs/html/index.html'
     }
     config['projects'].append(new_project)
@@ -195,7 +224,7 @@ PYTHON
     # 동기화
     if command -v python3 >/dev/null 2>&1; then
         echo "🔄 Syncing to admin database..."
-        (cd ~/dev-log-admin && python3 sync.py) || echo "⚠️  Sync failed (run manually later)"
+        (cd ~/saas-devlog-system/admin && python3 sync.py) || echo "⚠️  Sync failed (run manually later)"
     fi
 else
     echo "⚠️  dev-log-admin not found at ~/dev-log-admin"

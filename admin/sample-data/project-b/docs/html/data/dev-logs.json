@@ -1,0 +1,41 @@
+{
+  "project": "Dev Log System",
+  "logs": [
+    {
+      "log_number": 1,
+      "commit": "71c2814",
+      "type": "feat",
+      "title": "Initial release of dev-log system v1.0.0",
+      "author": {"name": "Ph.D SNT Go.", "email": "saint@dev.local"},
+      "date": "2026-02-05 18:49:00",
+      "files_changed": 35,
+      "lines_added": 3500,
+      "lines_deleted": 0,
+      "full_content": "feat: initial release v1.0.0\n\n- Create template system with install scripts\n- Build admin dashboard with FastAPI\n- Add 8 visualization generators\n- Set up SQLite database schema\n- Create Claude Code integration skill"
+    },
+    {
+      "log_number": 2,
+      "commit": "2193efc",
+      "type": "docs",
+      "title": "Update README with GitHub repository links",
+      "author": {"name": "Ph.D SNT Go.", "email": "saint@dev.local"},
+      "date": "2026-02-06 10:00:00",
+      "files_changed": 1,
+      "lines_added": 15,
+      "lines_deleted": 5,
+      "full_content": "docs: update README\n\n- Add GitHub repository URL\n- Update installation instructions with git clone"
+    },
+    {
+      "log_number": 3,
+      "commit": "930f5f1",
+      "type": "docs",
+      "title": "Add English README and separate Korean version",
+      "author": {"name": "Ph.D SNT Go.", "email": "saint@dev.local"},
+      "date": "2026-02-06 14:00:00",
+      "files_changed": 3,
+      "lines_added": 250,
+      "lines_deleted": 30,
+      "full_content": "docs: internationalization\n\n- Create English README.md\n- Move Korean content to README.ko.md\n- Add language toggle links"
+    }
+  ]
+}

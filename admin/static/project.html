@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dev Log Admin - Project Detail</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <h1 id="projectTitle">Loading...</h1>
+            <nav class="nav">
+                <a href="/" class="nav-link">Dashboard</a>
+                <a href="/search.html" class="nav-link">Search</a>
+                <a href="#" class="nav-link active">Project</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <section id="projectInfo" class="project-detail-header">
+            <div class="project-detail-loading">Loading project...</div>
+        </section>
+
+        <section class="project-stats-grid" id="projectStats"></section>
+
+        <section id="deploymentInfo" class="deployment-info-section" style="display:none;"></section>
+
+        <section class="section">
+            <div class="commits-header">
+                <h2>Commits</h2>
+                <div class="commits-controls">
+                    <div class="type-filters" id="typeFilters"></div>
+                    <div class="commits-search-box">
+                        <input type="text" id="commitSearch" placeholder="Search commits..." class="commit-search-input">
+                    </div>
+                </div>
+            </div>
+            <div id="commitsList" class="commits-list"></div>
+            <div id="loadMoreContainer" class="load-more-container" style="display:none;">
+                <button onclick="loadMoreCommits()" class="btn-primary load-more-btn">Load More</button>
+            </div>
+        </section>
+    </main>
+
+    <div id="commitModal" class="commit-modal" style="display:none;">
+        <div class="commit-modal-overlay" onclick="closeCommitModal()"></div>
+        <div class="commit-modal-content">
+            <div class="commit-modal-header">
+                <h3 id="modalTitle">Commit Detail</h3>
+                <button onclick="closeCommitModal()" class="commit-modal-close">&times;</button>
+            </div>
+            <div id="modalBody" class="commit-modal-body"></div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>Dev Log Admin v1.0 | SQLite Backend</p>
+    </footer>
+
+    <script src="project.js"></script>
+</body>
+</html>

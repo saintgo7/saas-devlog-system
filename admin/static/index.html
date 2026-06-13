@@ -4,16 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dev Log Admin - Dashboard</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <header class="header">
         <div class="header-content">
-            <h1>📊 개발 로그 통합 대시보드</h1>
+            <h1>개발 로그 통합 대시보드</h1>
             <nav class="nav">
                 <a href="/" class="nav-link active">Dashboard</a>
                 <a href="/search.html" class="nav-link">Search</a>
-                <button onclick="reloadData()" class="reload-btn">🔄 Reload</button>
+                <button onclick="triggerSync()" class="sync-btn">Sync</button>
+                <button onclick="reloadData()" class="reload-btn">Reload</button>
             </nav>
         </div>
     </header>
@@ -37,6 +39,11 @@
         <section class="chart-section">
             <h2>커밋 타입 분포</h2>
             <div id="typeChart" class="type-chart"></div>
+        </section>
+
+        <section class="chart-section">
+            <h2>Activity Heatmap</h2>
+            <div id="activityHeatmap" class="activity-heatmap"></div>
         </section>
 
         <section class="section">

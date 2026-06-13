@@ -113,7 +113,7 @@ cd your-project/
 
 ```bash
 # 기존 프로젝트에서 생성
-cd ~/01_DEV/saas-ws-abada-co-kr
+cd your-existing-project
 cp -r scripts ~/dev-log-template/
 cp docs/html/styles.css ~/dev-log-template/
 cp docs/html/scripts.js ~/dev-log-template/

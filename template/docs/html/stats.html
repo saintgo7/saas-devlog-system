@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Development Statistics - Dev Log System</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="scripts.js"></script>
+</head>
+<body>
+    <!-- Dark Mode Toggle -->
+    <button class="dark-mode-toggle" onclick="toggleDarkMode()" aria-label="Toggle Dark Mode">
+        <span id="darkModeIcon">🌙</span>
+        <span class="toggle-label" id="darkModeLabel">Dark</span>
+    </button>
+
+    <header class="page-header">
+        <div class="header-content">
+            <h1>Development Statistics</h1>
+            <p class="header-subtitle">Development Log Visualization Template - Sample Preview</p>
+        </div>
+        <nav class="stats-nav">
+            <a href="index.html" class="nav-link">Kanban Board</a>
+            <a href="timeline.html" class="nav-link">Timeline</a>
+            <a href="heatmap.html" class="nav-link">Heatmap</a>
+            <a href="files.html" class="nav-link">Files</a>
+            <a href="commit-size.html" class="nav-link">Commit Size</a>
+            <a href="time-analysis.html" class="nav-link">Time Analysis</a>
+            <a href="deployment.html" class="nav-link">Deployment</a>
+            <a href="stats.html" class="nav-link active">Statistics</a>
+        </nav>
+    </header>
+
+    <main class="stats-container">
+        <!-- Overall Stats -->
+        <section class="stats-overview">
+            <div class="stat-card">
+                <div class="stat-card-header">Total Commits</div>
+                <div class="stat-card-value">12</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-card-header">Files Changed</div>
+                <div class="stat-card-value">47</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-card-header">Lines Added</div>
+                <div class="stat-card-value text-green">+2,850</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-card-header">Lines Deleted</div>
+                <div class="stat-card-value text-red">-420</div>
+            </div>
+        </section>
+
+        <!-- Charts Grid -->
+        <section class="charts-grid">
+            <!-- Category Distribution -->
+            <div class="chart-card">
+                <h3 class="chart-title">Code Distribution</h3>
+                <p class="chart-subtitle">Frontend / Backend / Docs / Config</p>
+                <canvas id="categoryChart"></canvas>
+                <div class="chart-legend">
+                    <div class="legend-item">
+                        <span class="legend-dot" style="background: #10b981;"></span>
+                        <span>Frontend: 41.7%</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-dot" style="background: #3b82f6;"></span>
+                        <span>Backend: 33.3%</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-dot" style="background: #f59e0b;"></span>
+                        <span>Docs: 16.7%</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-dot" style="background: #8b5cf6;"></span>
+                        <span>Config: 8.3%</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Commit Type Distribution -->
+            <div class="chart-card">
+                <h3 class="chart-title">Commit Types</h3>
+                <p class="chart-subtitle">Commit distribution by type</p>
+                <canvas id="typeChart"></canvas>
+            </div>
+
+            <!-- Commits Over Time -->
+            <div class="chart-card full-width">
+                <h3 class="chart-title">Commits Over Time</h3>
+                <p class="chart-subtitle">Daily commit activity</p>
+                <canvas id="timelineChart"></canvas>
+            </div>
+        </section>
+    </main>
+
+    <footer class="page-footer">
+        <p>Generated at 2026-02-09 15:00:00 | Dev Log System</p>
+        <p><a href="https://github.com/example/dev-log-system" target="_blank">https://github.com/example/dev-log-system</a></p>
+    </footer>
+
+    <script>
+        const categories = {"frontend": 5, "backend": 4, "docs": 2, "config": 1};
+        const byType = {"feat": 5, "fix": 3, "docs": 2, "ci": 1, "refactor": 1};
+        const commitsTimeline = {"2026-02-01": 2, "2026-02-02": 1, "2026-02-03": 2, "2026-02-04": 1, "2026-02-05": 1, "2026-02-06": 2, "2026-02-07": 1, "2026-02-08": 1, "2026-02-09": 1};
+
+        // Category Doughnut Chart
+        new Chart(document.getElementById('categoryChart'), {
+            type: 'doughnut',
+            data: {
+                labels: ['Frontend', 'Backend', 'Docs', 'Config'],
+                datasets: [{
+                    data: [categories.frontend, categories.backend, categories.docs, categories.config],
+                    backgroundColor: ['#10b981', '#3b82f6', '#f59e0b', '#8b5cf6'],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        });
+
+        // Type Bar Chart
+        new Chart(document.getElementById('typeChart'), {
+            type: 'bar',
+            data: {
+                labels: Object.keys(byType),
+                datasets: [{
+                    label: 'Commits',
+                    data: Object.values(byType),
+                    backgroundColor: '#3b82f6',
+                    borderRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1
+                        }
+                    }
+                }
+            }
+        });
+
+        // Commits Over Time Line Chart
+        new Chart(document.getElementById('timelineChart'), {
+            type: 'line',
+            data: {
+                labels: Object.keys(commitsTimeline),
+                datasets: [{
+                    label: 'Commits',
+                    data: Object.values(commitsTimeline),
+                    borderColor: '#3b82f6',
+                    backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                    fill: true,
+                    tension: 0.3
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

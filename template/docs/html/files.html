@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Changes History - Dev Log System</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="scripts.js"></script>
+</head>
+<body>
+    <!-- Dark Mode Toggle -->
+    <button class="dark-mode-toggle" onclick="toggleDarkMode()" aria-label="Toggle Dark Mode">
+        <span id="darkModeIcon">🌙</span>
+        <span class="toggle-label" id="darkModeLabel">Dark</span>
+    </button>
+
+    <header class="page-header">
+        <div class="header-content">
+            <h1>File Changes History</h1>
+            <p class="header-subtitle">파일별 변경 내역 분석</p>
+        </div>
+        <nav class="stats-nav">
+            <a href="index.html" class="nav-link">Kanban Board</a>
+            <a href="timeline.html" class="nav-link">Timeline</a>
+            <a href="heatmap.html" class="nav-link">Heatmap</a>
+            <a href="files.html" class="nav-link active">Files</a>
+            <a href="commit-size.html" class="nav-link">Commit Size</a>
+            <a href="time-analysis.html" class="nav-link">Time Analysis</a>
+            <a href="deployment.html" class="nav-link">Deployment</a>
+            <a href="stats.html" class="nav-link">Statistics</a>
+        </nav>
+    </header>
+
+    <main class="files-container">
+        <!-- Summary Cards -->
+        <section class="files-summary">
+            <div class="summary-card">
+                <div class="summary-value">33</div>
+                <div class="summary-label">Unique Files</div>
+            </div>
+            <div class="summary-card">
+                <div class="summary-value">47</div>
+                <div class="summary-label">Total Changes</div>
+            </div>
+            <div class="summary-card">
+                <div class="summary-value">11</div>
+                <div class="summary-label">Frontend Files</div>
+            </div>
+            <div class="summary-card">
+                <div class="summary-value">12</div>
+                <div class="summary-label">Backend Files</div>
+            </div>
+        </section>
+
+        <!-- Charts Grid -->
+        <section class="charts-grid">
+            <!-- Top Changed Files Chart -->
+            <div class="chart-card full-width">
+                <h3 class="chart-title">Most Changed Files</h3>
+                <p class="chart-subtitle">파일별 변경 횟수 TOP 20</p>
+                <canvas id="topFilesChart"></canvas>
+            </div>
+
+            <!-- Category Distribution -->
+            <div class="chart-card">
+                <h3 class="chart-title">Files by Category</h3>
+                <p class="chart-subtitle">카테고리별 파일 분포</p>
+                <canvas id="categoryChart"></canvas>
+            </div>
+
+            <!-- Hot Files Table -->
+            <div class="chart-card">
+                <h3 class="chart-title">Hot Files</h3>
+                <p class="chart-subtitle">가장 자주 변경되는 파일</p>
+                <div class="hot-files-list">
+    
+                    <div class="hot-file-item">
+                        <div class="hot-file-rank">#1</div>
+                        <div class="hot-file-info">
+                            <div class="hot-file-name">main.ts</div>
+                            <div class="hot-file-path">src/app/main.ts</div>
+                        </div>
+                        <div class="hot-file-count">3 changes</div>
+                    </div>
+        
+                    <div class="hot-file-item">
+                        <div class="hot-file-rank">#2</div>
+                        <div class="hot-file-info">
+                            <div class="hot-file-name">Dashboard.tsx</div>
+                            <div class="hot-file-path">src/components/Dashboard.tsx</div>
+                        </div>
+                        <div class="hot-file-count">3 changes</div>
+                    </div>
+        
+                    <div class="hot-file-item">
+                        <div class="hot-file-rank">#3</div>
+                        <div class="hot-file-info">
+                            <div class="hot-file-name">README.md</div>
+                            <div class="hot-file-path">README.md</div>
+                        </div>
+                        <div class="hot-file-count">2 changes</div>
+                    </div>
+        
+                    <div class="hot-file-item">
+                        <div class="hot-file-rank">#4</div>
+                        <div class="hot-file-info">
+                            <div class="hot-file-name">auth.ts</div>
+                            <div class="hot-file-path">src/api/auth.ts</div>
+                        </div>
+                        <div class="hot-file-count">2 changes</div>
+                    </div>
+        
+                    <div class="hot-file-item">
+                        <div class="hot-file-rank">#5</div>
+                        <div class="hot-file-info">
+                            <div class="hot-file-name">auth.ts</div>
+                            <div class="hot-file-path">src/middleware/auth.ts</div>
+                        </div>
+                        <div class="hot-file-count">2 changes</div>
+                    </div>
+        
+                    <div class="hot-file-item">
+                        <div class="hot-file-rank">#6</div>
+                        <div class="hot-file-info">
+                            <div class="hot-file-name">auth.py</div>
+                            <div class="hot-file-path">server/routes/auth.py</div>
+                        </div>
+                        <div class="hot-file-count">2 changes</div>
+                    </div>
+        
+                    <div class="hot-file-item">
+                        <div class="hot-file-rank">#7</div>
+                        <div class="hot-file-info">
+                            <div class="hot-file-name">Chart.tsx</div>
+                            <div class="hot-file-path">src/components/Chart.tsx</div>
+                        </div>
+                        <div class="hot-file-count">2 changes</div>
+                    </div>
+        
+                    <div class="hot-file-item">
+                        <div class="hot-file-rank">#8</div>
+                        <div class="hot-file-info">
+                            <div class="hot-file-name">dashboard.css</div>
+                            <div class="hot-file-path">styles/dashboard.css</div>
+                        </div>
+                        <div class="hot-file-count">2 changes</div>
+                    </div>
+        
+                    <div class="hot-file-item">
+                        <div class="hot-file-rank">#9</div>
+                        <div class="hot-file-info">
+                            <div class="hot-file-name">Header.tsx</div>
+                            <div class="hot-file-path">src/components/Header.tsx</div>
+                        </div>
+                        <div class="hot-file-count">2 changes</div>
+                    </div>
+        
+                    <div class="hot-file-item">
+                        <div class="hot-file-rank">#10</div>
+                        <div class="hot-file-info">
+                            <div class="hot-file-name">README.md</div>
+                            <div class="hot-file-path">docs/api/README.md</div>
+                        </div>
+                        <div class="hot-file-count">2 changes</div>
+                    </div>
+        
+                </div>
+            </div>
+        </section>
+
+        <!-- Detailed File List by Category -->
+        <section class="files-by-category">
+            <h2 class="section-title">Files by Category</h2>
+    
+            <div class="category-section">
+                <h3 class="category-title">Frontend (11 files)</h3>
+                <div class="file-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>File</th>
+                                <th>Changes</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+            
+                            <tr>
+                                <td class="file-cell">src/app/main.ts</td>
+                                <td class="count-cell">3</td>
+                            </tr>
+                
+                            <tr>
+                                <td class="file-cell">src/components/Dashboard.tsx</td>
+                                <td class="count-cell">3</td>
+                            </tr>
+                
+                            <tr>
+                                <td class="file-cell">src/components/Chart.tsx</td>
+                                <td class="count-cell">2</td>
+                            </tr>
+                
+                            <tr>
+                                <td class="file-cell">styles/dashboard.css</td>
+                                <td class="count-cell">2</td>
+                            </tr>
+                
+                            <tr>
+                                <td class="file-cell">src/components/Header.tsx</td>
+                                <td class="count-cell">2</td>
+                            </tr>
+                
+                            <tr>
+                                <td class="file-cell">src/components/App.tsx</td>
+                                <td class="count-cell">1</td>
+                            </tr>
+                
+                            <tr>
+                                <td class="file-cell">src/components/Login.tsx</td>
+                                <td class="count-cell">1</td>
+                            </tr>
+                
+                            <tr>
+                                <td class="file-cell">src/components/Sidebar.tsx</td>
+                                <td class="count-cell">1</td>
+                            </tr>
+                
+                            <tr>
+                                <td class="file-cell">src/components/ExportButton.tsx</td>
+                                <td class="count-cell">1</td>
+                            </tr>
+                
+                            <tr>
+                                <td class="file-cell">src/components/Notifications.tsx</td>
+                                <td class="count-cell">1</td>
+                            </tr>
+                
+                            <tr>
+                                <td class="file-cell">src/components/NotificationPrefs.tsx</td>
+                                <td class="count-cell">1</td>
+                            </tr>
+                
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <div class="category-section">
+                <h3 class="category-title">Backend (12 files)</h3>
+                <div class="file-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>File</th>
+                                <th>Changes</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+            
+                            <tr>
+                                <td class="file-cell">src/api/auth.ts</td>
+                                <td class="count-cell">2</td>
+                            </tr>
+                
+                            <tr>
+                                <td class="file-cell">server/routes/auth.py</td>
+                                <td class="count-cell">2</td>
+                            </tr>
+                
+                            <tr>
+                                <td class="file-cell">docs/api/README.md</td>
+                                <td class="count-cell">2</td>
+                            </tr>
+                
+                            <tr>
+                                <td class="file-cell">server/app.py</td>
+                                <td class="count-cell">2</td>
+                            </tr>
+                
+                            <tr>
+                                <td class="file-cell">server/services/notification.py</td>
+                                <td class="count-cell">2</td>
+                            </tr>
+                
+                            <tr>
+                                <td class="file-cell">docs/api/swagger.yaml</td>
+                                <td class="count-cell">1</td>
+                            </tr>
+                
+                            <tr>
+                                <td class="file-cell">src/api/export.ts</td>
+                                <td class="count-cell">1</td>
+                            </tr>
+                
+                            <tr>
+                                <td class="file-cell">server/routes/export.py</td>
+                                <td class="count-cell">1</td>
+                            </tr>
+                
+                            <tr>
+                                <td class="file-cell">server/database.py</td>
+                                <td class="count-cell">1</td>
+                            </tr>
+                
+                            <tr>
+                                <td class="file-cell">server/db_pool.py</td>
+                                <td class="count-cell">1</td>
+                            </tr>
+                
+                            <tr>
+                                <td class="file-cell">server/routes/notifications.py</td>
+                                <td class="count-cell">1</td>
+                            </tr>
+                
+                            <tr>
+                                <td class="file-cell">server/templates/email.html</td>
+                                <td class="count-cell">1</td>
+                            </tr>
+                
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <div class="category-section">
+                <h3 class="category-title">Documentation (1 files)</h3>
+                <div class="file-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>File</th>
+                                <th>Changes</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+            
+                            <tr>
+                                <td class="file-cell">README.md</td>
+                                <td class="count-cell">2</td>
+                            </tr>
+                
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <div class="category-section">
+                <h3 class="category-title">Configuration (5 files)</h3>
+                <div class="file-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>File</th>
+                                <th>Changes</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+            
+                            <tr>
+                                <td class="file-cell">package.json</td>
+                                <td class="count-cell">1</td>
+                            </tr>
+                
+                            <tr>
+                                <td class="file-cell">tsconfig.json</td>
+                                <td class="count-cell">1</td>
+                            </tr>
+                
+                            <tr>
+                                <td class="file-cell">.github/workflows/ci.yml</td>
+                                <td class="count-cell">1</td>
+                            </tr>
+                
+                            <tr>
+                                <td class="file-cell">.github/workflows/deploy.yml</td>
+                                <td class="count-cell">1</td>
+                            </tr>
+                
+                            <tr>
+                                <td class="file-cell">docker-compose.yml</td>
+                                <td class="count-cell">1</td>
+                            </tr>
+                
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <div class="category-section">
+                <h3 class="category-title">Other (4 files)</h3>
+                <div class="file-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>File</th>
+                                <th>Changes</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+            
+                            <tr>
+                                <td class="file-cell">src/middleware/auth.ts</td>
+                                <td class="count-cell">2</td>
+                            </tr>
+                
+                            <tr>
+                                <td class="file-cell">src/index.ts</td>
+                                <td class="count-cell">1</td>
+                            </tr>
+                
+                            <tr>
+                                <td class="file-cell">.eslintrc.js</td>
+                                <td class="count-cell">1</td>
+                            </tr>
+                
+                            <tr>
+                                <td class="file-cell">.prettierrc</td>
+                                <td class="count-cell">1</td>
+                            </tr>
+                
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+        </section>
+    </main>
+
+    <footer class="page-footer">
+        <p>Generated at 2026-02-09 15:00:00 | Dev Log System</p>
+        <p><a href="https://github.com/example/dev-log-system" target="_blank">https://github.com/example/dev-log-system</a></p>
+    </footer>
+
+    <script>
+        const topFilesData = {"src/app/main.ts": 3, "src/components/Dashboard.tsx": 3, "README.md": 2, "src/api/auth.ts": 2, "src/middleware/auth.ts": 2, "server/routes/auth.py": 2, "src/components/Chart.tsx": 2, "styles/dashboard.css": 2, "src/components/Header.tsx": 2, "docs/api/README.md": 2, "server/app.py": 2, "server/services/notification.py": 2, "package.json": 1, "src/index.ts": 1, ".eslintrc.js": 1, "tsconfig.json": 1, "src/components/App.tsx": 1, ".prettierrc": 1, "src/components/Login.tsx": 1, "src/components/Sidebar.tsx": 1};
+        const categoriesData = {"frontend": 11, "backend": 12, "docs": 1, "config": 5, "other": 4};
+
+        // Top Files Bar Chart
+        const topFilesLabels = Object.keys(topFilesData).map(path => {
+            const parts = path.split('/');
+            return parts[parts.length - 1];
+        });
+        const topFilesValues = Object.values(topFilesData);
+
+        new Chart(document.getElementById('topFilesChart'), {
+            type: 'bar',
+            data: {
+                labels: topFilesLabels,
+                datasets: [{
+                    label: 'Changes',
+                    data: topFilesValues,
+                    backgroundColor: '#3b82f6',
+                    borderRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                indexAxis: 'y',
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1
+                        }
+                    }
+                }
+            }
+        });
+
+        // Category Doughnut Chart
+        new Chart(document.getElementById('categoryChart'), {
+            type: 'doughnut',
+            data: {
+                labels: ['Frontend', 'Backend', 'Docs', 'Config', 'Other'],
+                datasets: [{
+                    data: Object.values(categoriesData),
+                    backgroundColor: ['#10b981', '#3b82f6', '#f59e0b', '#8b5cf6', '#6b7280'],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+
+    </script>
+</body>
+</html>

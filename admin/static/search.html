@@ -4,12 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dev Log Admin - Search</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <header class="header">
         <div class="header-content">
-            <h1>🔍 통합 검색</h1>
+            <h1>통합 검색</h1>
             <nav class="nav">
                 <a href="/" class="nav-link">Dashboard</a>
                 <a href="/search.html" class="nav-link active">Search</a>
@@ -23,9 +24,38 @@
             <button onclick="performSearch()" class="search-btn">Search</button>
         </section>
 
+        <section class="search-filters">
+            <div class="search-filters-row">
+                <div class="filter-group">
+                    <label class="filter-label" for="projectFilter">Project</label>
+                    <select id="projectFilter" class="filter-select">
+                        <option value="">All Projects</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label class="filter-label">Type</label>
+                    <div id="typeFilters" class="type-filters">
+                        <button class="type-filter-btn active" data-type="">All</button>
+                        <button class="type-filter-btn" data-type="feat">feat</button>
+                        <button class="type-filter-btn" data-type="fix">fix</button>
+                        <button class="type-filter-btn" data-type="docs">docs</button>
+                        <button class="type-filter-btn" data-type="refactor">refactor</button>
+                        <button class="type-filter-btn" data-type="test">test</button>
+                        <button class="type-filter-btn" data-type="chore">chore</button>
+                        <button class="type-filter-btn" data-type="ci">ci</button>
+                        <button class="type-filter-btn" data-type="perf">perf</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <section id="searchResults" class="search-results">
             <p class="search-hint">검색어를 입력하세요</p>
         </section>
+
+        <div class="load-more-container">
+            <button id="loadMoreBtn" class="load-more-btn btn-secondary" onclick="loadMore()" style="display:none">Load More</button>
+        </div>
     </main>
 
     <footer class="footer">

@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Activity Heatmap - Dev Log System</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="scripts.js"></script>
+</head>
+<body>
+    <!-- Dark Mode Toggle -->
+    <button class="dark-mode-toggle" onclick="toggleDarkMode()" aria-label="Toggle Dark Mode">
+        <span id="darkModeIcon">🌙</span>
+        <span class="toggle-label" id="darkModeLabel">Dark</span>
+    </button>
+
+    <header class="page-header">
+        <div class="header-content">
+            <h1>Activity Heatmap</h1>
+            <p class="header-subtitle">개발 활동 히트맵</p>
+        </div>
+        <nav class="stats-nav">
+            <a href="index.html" class="nav-link">Kanban Board</a>
+            <a href="timeline.html" class="nav-link">Timeline</a>
+            <a href="heatmap.html" class="nav-link active">Heatmap</a>
+            <a href="files.html" class="nav-link">Files</a>
+            <a href="commit-size.html" class="nav-link">Commit Size</a>
+            <a href="time-analysis.html" class="nav-link">Time Analysis</a>
+            <a href="deployment.html" class="nav-link">Deployment</a>
+            <a href="stats.html" class="nav-link">Statistics</a>
+        </nav>
+    </header>
+
+    <main class="heatmap-container">
+        <!-- Activity Summary -->
+        <section class="heatmap-summary">
+            <div class="summary-card">
+                <div class="summary-value">12</div>
+                <div class="summary-label">Total Commits</div>
+            </div>
+            <div class="summary-card">
+                <div class="summary-value">9</div>
+                <div class="summary-label">Active Days</div>
+            </div>
+            <div class="summary-card">
+                <div class="summary-value">9</div>
+                <div class="summary-label">Current Streak</div>
+            </div>
+            <div class="summary-card">
+                <div class="summary-value">9</div>
+                <div class="summary-label">Longest Streak</div>
+            </div>
+        </section>
+
+        <!-- Heatmap -->
+        <section class="heatmap-section">
+            <div class="heatmap-header">
+                <h2>Commit Activity</h2>
+                <p class="heatmap-period">2026-02-01 - 2026-02-09</p>
+            </div>
+
+            <div class="heatmap-grid"><div class="heatmap-months"><div class="month-label">Feb</div><div class="month-label"></div><div class="month-label"></div></div><div class="heatmap-days"><div class="day-label"></div><div class="day-label">Mon</div><div class="day-label"></div><div class="day-label">Wed</div><div class="day-label"></div><div class="day-label">Fri</div><div class="day-label"></div></div><div class="heatmap-cells"><div class="heatmap-week"><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell intensity-4"
+                    data-date="2026-02-01"
+                    data-count="2"
+                    title="2026-02-01 (Sun): 2 commits">
+                </div></div><div class="heatmap-week"><div class="heatmap-cell intensity-2"
+                    data-date="2026-02-02"
+                    data-count="1"
+                    title="2026-02-02 (Mon): 1 commits">
+                </div><div class="heatmap-cell intensity-4"
+                    data-date="2026-02-03"
+                    data-count="2"
+                    title="2026-02-03 (Tue): 2 commits">
+                </div><div class="heatmap-cell intensity-2"
+                    data-date="2026-02-04"
+                    data-count="1"
+                    title="2026-02-04 (Wed): 1 commits">
+                </div><div class="heatmap-cell intensity-2"
+                    data-date="2026-02-05"
+                    data-count="1"
+                    title="2026-02-05 (Thu): 1 commits">
+                </div><div class="heatmap-cell intensity-4"
+                    data-date="2026-02-06"
+                    data-count="2"
+                    title="2026-02-06 (Fri): 2 commits">
+                </div><div class="heatmap-cell intensity-2"
+                    data-date="2026-02-07"
+                    data-count="1"
+                    title="2026-02-07 (Sat): 1 commits">
+                </div><div class="heatmap-cell intensity-2"
+                    data-date="2026-02-08"
+                    data-count="1"
+                    title="2026-02-08 (Sun): 1 commits">
+                </div></div><div class="heatmap-week"><div class="heatmap-cell intensity-2"
+                    data-date="2026-02-09"
+                    data-count="1"
+                    title="2026-02-09 (Mon): 1 commits">
+                </div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div><div class="heatmap-cell empty"></div></div></div></div>
+
+            
+    <div class="heatmap-legend">
+        <span class="legend-label">Less</span>
+        <div class="legend-squares">
+            <div class="legend-square intensity-0"></div>
+            <div class="legend-square intensity-1"></div>
+            <div class="legend-square intensity-2"></div>
+            <div class="legend-square intensity-3"></div>
+            <div class="legend-square intensity-4"></div>
+        </div>
+        <span class="legend-label">More</span>
+    </div>
+    
+        </section>
+
+        <!-- Top Days -->
+        <section class="top-days-section">
+            <h2>Most Active Days</h2>
+            <div class="top-days-list">
+    
+                <div class="top-day-item">
+                    <div class="top-day-date">2026-02-01 (Sun)</div>
+                    <div class="top-day-bar">
+                        <div class="top-day-fill" style="width: 100.0%"></div>
+                    </div>
+                    <div class="top-day-count">2 commits</div>
+                </div>
+            
+                <div class="top-day-item">
+                    <div class="top-day-date">2026-02-03 (Tue)</div>
+                    <div class="top-day-bar">
+                        <div class="top-day-fill" style="width: 100.0%"></div>
+                    </div>
+                    <div class="top-day-count">2 commits</div>
+                </div>
+            
+                <div class="top-day-item">
+                    <div class="top-day-date">2026-02-06 (Fri)</div>
+                    <div class="top-day-bar">
+                        <div class="top-day-fill" style="width: 100.0%"></div>
+                    </div>
+                    <div class="top-day-count">2 commits</div>
+                </div>
+            
+                <div class="top-day-item">
+                    <div class="top-day-date">2026-02-02 (Mon)</div>
+                    <div class="top-day-bar">
+                        <div class="top-day-fill" style="width: 50.0%"></div>
+                    </div>
+                    <div class="top-day-count">1 commits</div>
+                </div>
+            
+                <div class="top-day-item">
+                    <div class="top-day-date">2026-02-04 (Wed)</div>
+                    <div class="top-day-bar">
+                        <div class="top-day-fill" style="width: 50.0%"></div>
+                    </div>
+                    <div class="top-day-count">1 commits</div>
+                </div>
+            
+                <div class="top-day-item">
+                    <div class="top-day-date">2026-02-05 (Thu)</div>
+                    <div class="top-day-bar">
+                        <div class="top-day-fill" style="width: 50.0%"></div>
+                    </div>
+                    <div class="top-day-count">1 commits</div>
+                </div>
+            
+                <div class="top-day-item">
+                    <div class="top-day-date">2026-02-07 (Sat)</div>
+                    <div class="top-day-bar">
+                        <div class="top-day-fill" style="width: 50.0%"></div>
+                    </div>
+                    <div class="top-day-count">1 commits</div>
+                </div>
+            
+                <div class="top-day-item">
+                    <div class="top-day-date">2026-02-08 (Sun)</div>
+                    <div class="top-day-bar">
+                        <div class="top-day-fill" style="width: 50.0%"></div>
+                    </div>
+                    <div class="top-day-count">1 commits</div>
+                </div>
+            
+                <div class="top-day-item">
+                    <div class="top-day-date">2026-02-09 (Mon)</div>
+                    <div class="top-day-bar">
+                        <div class="top-day-fill" style="width: 50.0%"></div>
+                    </div>
+                    <div class="top-day-count">1 commits</div>
+                </div>
+            
+            </div>
+        </section>
+    </main>
+
+    <footer class="page-footer">
+        <p>Generated at 2026-02-09 15:00:00 | Dev Log System</p>
+        <p><a href="https://github.com/example/dev-log-system" target="_blank">https://github.com/example/dev-log-system</a></p>
+    </footer>
+
+    <script>
+        // Tooltip for heatmap cells
+        document.querySelectorAll('.heatmap-cell:not(.empty)').forEach(cell => {
+            cell.addEventListener('mouseenter', function(e) {
+                const date = this.dataset.date;
+                const count = this.dataset.count;
+                // Native title attribute provides tooltip
+            });
+        });
+
+    </script>
+</body>
+</html>

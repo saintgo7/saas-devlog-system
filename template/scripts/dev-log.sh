@@ -36,7 +36,7 @@ increment_counter() {
     local current=$(get_counter)
     local next=$((current + 1))
     echo "$next" > "$COUNTER_FILE"
-    printf "%02d" "$next"
+    printf "%03d" "$next"
 }
 
 # Get commit information
@@ -47,9 +47,13 @@ COMMIT_BODY=$(git log -1 --format="%b" "$COMMIT_HASH" 2>/dev/null || echo "")
 COMMIT_AUTHOR=$(git log -1 --format="%an" "$COMMIT_HASH" 2>/dev/null || echo "Unknown")
 COMMIT_EMAIL=$(git log -1 --format="%ae" "$COMMIT_HASH" 2>/dev/null || echo "")
 COMMIT_DATE=$(git log -1 --format="%ai" "$COMMIT_HASH" 2>/dev/null || echo "")
-COMMIT_DATETIME=$(date -d "$COMMIT_DATE" "+%Y-%m-%d %H:%M:%S" 2>/dev/null || date "+%Y-%m-%d %H:%M:%S")
-COMMIT_DATE_SHORT=$(date -d "$COMMIT_DATE" "+%Y-%m-%d" 2>/dev/null || date "+%Y-%m-%d")
-COMMIT_TIME_SHORT=$(date -d "$COMMIT_DATE" "+%H%M" 2>/dev/null || date "+%H%M")
+# Cross-platform date parsing (git --format="%ai" outputs "YYYY-MM-DD HH:MM:SS +ZZZZ")
+COMMIT_DATETIME=$(echo "$COMMIT_DATE" | sed 's/ [+-][0-9]*$//')
+if [ -z "$COMMIT_DATETIME" ]; then
+    COMMIT_DATETIME=$(date "+%Y-%m-%d %H:%M:%S")
+fi
+COMMIT_DATE_SHORT=$(echo "$COMMIT_DATETIME" | cut -c1-10)
+COMMIT_TIME_SHORT=$(echo "$COMMIT_DATETIME" | cut -c12-13)$(echo "$COMMIT_DATETIME" | cut -c15-16)
 
 # Extract commit type using sed
 extract_commit_type() {
@@ -105,8 +109,8 @@ FILES_COUNT=$(echo "$FILES_CHANGED" | grep -c "." 2>/dev/null || echo "0")
 
 # Get diff stats
 DIFF_STATS=$(git show --stat --format="" "$COMMIT_HASH" 2>/dev/null | tail -1 || echo "")
-ADDITIONS=$(echo "$DIFF_STATS" | grep -oP '\d+(?= insertion)' 2>/dev/null || echo "0")
-DELETIONS=$(echo "$DIFF_STATS" | grep -oP '\d+(?= deletion)' 2>/dev/null || echo "0")
+ADDITIONS=$(echo "$DIFF_STATS" | grep -o '[0-9]* insertion' | grep -o '[0-9]*' || echo "0")
+DELETIONS=$(echo "$DIFF_STATS" | grep -o '[0-9]* deletion' | grep -o '[0-9]*' || echo "0")
 
 # Generate filename
 COUNTER=$(increment_counter)

@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Commit Size Analysis - Dev Log System</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="scripts.js"></script>
+</head>
+<body>
+    <!-- Dark Mode Toggle -->
+    <button class="dark-mode-toggle" onclick="toggleDarkMode()" aria-label="Toggle Dark Mode">
+        <span id="darkModeIcon">🌙</span>
+        <span class="toggle-label" id="darkModeLabel">Dark</span>
+    </button>
+
+    <header class="page-header">
+        <div class="header-content">
+            <h1>Commit Size Analysis</h1>
+            <p class="header-subtitle">커밋 크기 패턴 분석</p>
+        </div>
+        <nav class="stats-nav">
+            <a href="index.html" class="nav-link">Kanban Board</a>
+            <a href="timeline.html" class="nav-link">Timeline</a>
+            <a href="heatmap.html" class="nav-link">Heatmap</a>
+            <a href="files.html" class="nav-link">Files</a>
+            <a href="commit-size.html" class="nav-link active">Commit Size</a>
+            <a href="time-analysis.html" class="nav-link">Time Analysis</a>
+            <a href="deployment.html" class="nav-link">Deployment</a>
+            <a href="stats.html" class="nav-link">Statistics</a>
+        </nav>
+    </header>
+
+    <main class="commit-size-container">
+        <!-- Summary Cards -->
+        <section class="size-summary">
+            <div class="size-card small">
+                <div class="size-card-header">
+                    <span class="size-badge">Small</span>
+                    <span class="size-range">&lt; 50 lines</span>
+                </div>
+                <div class="size-card-value">0</div>
+                <div class="size-card-percentage">0.0%</div>
+            </div>
+            <div class="size-card medium">
+                <div class="size-card-header">
+                    <span class="size-badge">Medium</span>
+                    <span class="size-range">50-200 lines</span>
+                </div>
+                <div class="size-card-value">4</div>
+                <div class="size-card-percentage">33.3%</div>
+            </div>
+            <div class="size-card large">
+                <div class="size-card-header">
+                    <span class="size-badge">Large</span>
+                    <span class="size-range">200-500 lines</span>
+                </div>
+                <div class="size-card-value">7</div>
+                <div class="size-card-percentage">58.3%</div>
+            </div>
+            <div class="size-card xlarge">
+                <div class="size-card-header">
+                    <span class="size-badge">X-Large</span>
+                    <span class="size-range">&gt; 500 lines</span>
+                </div>
+                <div class="size-card-value">1</div>
+                <div class="size-card-percentage">8.3%</div>
+            </div>
+        </section>
+
+        <!-- Charts -->
+        <section class="charts-grid">
+            <div class="chart-card">
+                <h3 class="chart-title">Size Distribution</h3>
+                <p class="chart-subtitle">커밋 크기 분포</p>
+                <canvas id="sizeChart"></canvas>
+            </div>
+
+            <div class="chart-card">
+                <h3 class="chart-title">Best Practices</h3>
+                <p class="chart-subtitle">권장 사항</p>
+                <div class="best-practices">
+                    <div class="practice-item">
+                        <div class="practice-icon">✓</div>
+                        <div class="practice-text">
+                            <strong>Small commits preferred:</strong> Easier to review and debug
+                        </div>
+                    </div>
+                    <div class="practice-item">
+                        <div class="practice-icon">⚠</div>
+                        <div class="practice-text">
+                            <strong>Large commits:</strong> Consider breaking into smaller pieces
+                        </div>
+                    </div>
+                    <div class="practice-item">
+                        <div class="practice-icon">!</div>
+                        <div class="practice-text">
+                            <strong>X-Large commits:</strong> Review for potential split opportunities
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Commit Lists by Size -->
+        <section class="commit-lists">
+    
+            <div class="commit-list-section">
+                <h3 class="commit-list-title">Medium Commits (4)</h3>
+                <div class="commit-list">
+            
+                    <div class="commit-size-item">
+                        <div class="commit-size-header">
+                            <span class="commit-size-number">#006</span>
+                            <span class="commit-size-hash">f6a7b8c</span>
+                        </div>
+                        <div class="commit-size-title">Setup CI/CD pipeline with GitHub Actions</div>
+                        <div class="commit-size-stats">
+                            <span class="stat-item">
+                                <span class="stat-label">Files:</span> 3
+                            </span>
+                            <span class="stat-item">
+                                <span class="stat-label text-green">+150</span>
+                            </span>
+                            <span class="stat-item">
+                                <span class="stat-label text-red">-0</span>
+                            </span>
+                            <span class="stat-item">
+                                <span class="stat-label">Total:</span> 150 lines
+                            </span>
+                        </div>
+                    </div>
+                
+                    <div class="commit-size-item">
+                        <div class="commit-size-header">
+                            <span class="commit-size-number">#008</span>
+                            <span class="commit-size-hash">b8c9d0e</span>
+                        </div>
+                        <div class="commit-size-title">Fix chart rendering on mobile devices</div>
+                        <div class="commit-size-stats">
+                            <span class="stat-item">
+                                <span class="stat-label">Files:</span> 3
+                            </span>
+                            <span class="stat-item">
+                                <span class="stat-label text-green">+85</span>
+                            </span>
+                            <span class="stat-item">
+                                <span class="stat-label text-red">-40</span>
+                            </span>
+                            <span class="stat-item">
+                                <span class="stat-label">Total:</span> 125 lines
+                            </span>
+                        </div>
+                    </div>
+                
+                    <div class="commit-size-item">
+                        <div class="commit-size-header">
+                            <span class="commit-size-number">#011</span>
+                            <span class="commit-size-hash">e1f2a3b</span>
+                        </div>
+                        <div class="commit-size-title">Fix email template rendering issue</div>
+                        <div class="commit-size-stats">
+                            <span class="stat-item">
+                                <span class="stat-label">Files:</span> 2
+                            </span>
+                            <span class="stat-item">
+                                <span class="stat-label text-green">+60</span>
+                            </span>
+                            <span class="stat-item">
+                                <span class="stat-label text-red">-35</span>
+                            </span>
+                            <span class="stat-item">
+                                <span class="stat-label">Total:</span> 95 lines
+                            </span>
+                        </div>
+                    </div>
+                
+                    <div class="commit-size-item">
+                        <div class="commit-size-header">
+                            <span class="commit-size-number">#004</span>
+                            <span class="commit-size-hash">d4e5f6a</span>
+                        </div>
+                        <div class="commit-size-title">Fix login token refresh bug</div>
+                        <div class="commit-size-stats">
+                            <span class="stat-item">
+                                <span class="stat-label">Files:</span> 2
+                            </span>
+                            <span class="stat-item">
+                                <span class="stat-label text-green">+45</span>
+                            </span>
+                            <span class="stat-item">
+                                <span class="stat-label text-red">-20</span>
+                            </span>
+                            <span class="stat-item">
+                                <span class="stat-label">Total:</span> 65 lines
+                            </span>
+                        </div>
+                    </div>
+                
+                </div>
+            </div>
+            
+            <div class="commit-list-section">
+                <h3 class="commit-list-title">Large Commits (7)</h3>
+                <div class="commit-list">
+            
+                    <div class="commit-size-item">
+                        <div class="commit-size-header">
+                            <span class="commit-size-number">#001</span>
+                            <span class="commit-size-hash">a1b2c3d</span>
+                        </div>
+                        <div class="commit-size-title">Initialize project structure and setup</div>
+                        <div class="commit-size-stats">
+                            <span class="stat-item">
+                                <span class="stat-label">Files:</span> 8
+                            </span>
+                            <span class="stat-item">
+                                <span class="stat-label text-green">+450</span>
+                            </span>
+                            <span class="stat-item">
+                                <span class="stat-label text-red">-0</span>
+                            </span>
+                            <span class="stat-item">
+                                <span class="stat-label">Total:</span> 450 lines
+                            </span>
+                        </div>
+                    </div>
+                
+                    <div class="commit-size-item">
+                        <div class="commit-size-header">
+                            <span class="commit-size-number">#002</span>
+                            <span class="commit-size-hash">b2c3d4e</span>
+                        </div>
+                        <div class="commit-size-title">Add user authentication module</div>
+                        <div class="commit-size-stats">
+                            <span class="stat-item">
+                                <span class="stat-label">Files:</span> 5
+                            </span>
+                            <span class="stat-item">
+                                <span class="stat-label text-green">+380</span>
+                            </span>
+                            <span class="stat-item">
+                                <span class="stat-label text-red">-15</span>
+                            </span>
+                            <span class="stat-item">
+                                <span class="stat-label">Total:</span> 395 lines
+                            </span>
+                        </div>
+                    </div>
+                
+                    <div class="commit-size-item">
+                        <div class="commit-size-header">
+                            <span class="commit-size-number">#010</span>
+                            <span class="commit-size-hash">d0e1f2a</span>
+                        </div>
+                        <div class="commit-size-title">Add notification system</div>
+                        <div class="commit-size-stats">
+                            <span class="stat-item">
+                                <span class="stat-label">Files:</span> 5
+                            </span>
+                            <span class="stat-item">
+                                <span class="stat-label text-green">+350</span>
+                            </span>
+                            <span class="stat-item">
+                                <span class="stat-label text-red">-15</span>
+                            </span>
+                            <span class="stat-item">
+                                <span class="stat-label">Total:</span> 365 lines
+                            </span>
+                        </div>
+                    </div>
+                
+                    <div class="commit-size-item">
+                        <div class="commit-size-header">
+                            <span class="commit-size-number">#007</span>
+                            <span class="commit-size-hash">a7b8c9d</span>
+                        </div>
+                        <div class="commit-size-title">Implement data export feature</div>
+                        <div class="commit-size-stats">
+                            <span class="stat-item">
+                                <span class="stat-label">Files:</span> 4
+                            </span>
+                            <span class="stat-item">
+                                <span class="stat-label text-green">+320</span>
+                            </span>
+                            <span class="stat-item">
+                                <span class="stat-label text-red">-25</span>
+                            </span>
+                            <span class="stat-item">
+                                <span class="stat-label">Total:</span> 345 lines
+                            </span>
+                        </div>
+                    </div>
+                
+                    <div class="commit-size-item">
+                        <div class="commit-size-header">
+                            <span class="commit-size-number">#005</span>
+                            <span class="commit-size-hash">e5f6a7b</span>
+                        </div>
+                        <div class="commit-size-title">Add API documentation with Swagger</div>
+                        <div class="commit-size-stats">
+                            <span class="stat-item">
+                                <span class="stat-label">Files:</span> 4
+                            </span>
+                            <span class="stat-item">
+                                <span class="stat-label text-green">+280</span>
+                            </span>
+                            <span class="stat-item">
+                                <span class="stat-label text-red">-10</span>
+                            </span>
+                            <span class="stat-item">
+                                <span class="stat-label">Total:</span> 290 lines
+                            </span>
+                        </div>
+                    </div>
+                
+                    <div class="commit-size-item">
+                        <div class="commit-size-header">
+                            <span class="commit-size-number">#012</span>
+                            <span class="commit-size-hash">f2a3b4c</span>
+                        </div>
+                        <div class="commit-size-title">Update README and deployment guide</div>
+                        <div class="commit-size-stats">
+                            <span class="stat-item">
+                                <span class="stat-label">Files:</span> 2
+                            </span>
+                            <span class="stat-item">
+                                <span class="stat-label text-green">+90</span>
+                            </span>
+                            <span class="stat-item">
+                                <span class="stat-label text-red">-135</span>
+                            </span>
+                            <span class="stat-item">
+                                <span class="stat-label">Total:</span> 225 lines
+                            </span>
+                        </div>
+                    </div>
+                
+                    <div class="commit-size-item">
+                        <div class="commit-size-header">
+                            <span class="commit-size-number">#009</span>
+                            <span class="commit-size-hash">c9d0e1f</span>
+                        </div>
+                        <div class="commit-size-title">Refactor database connection pooling</div>
+                        <div class="commit-size-stats">
+                            <span class="stat-item">
+                                <span class="stat-label">Files:</span> 3
+                            </span>
+                            <span class="stat-item">
+                                <span class="stat-label text-green">+120</span>
+                            </span>
+                            <span class="stat-item">
+                                <span class="stat-label text-red">-95</span>
+                            </span>
+                            <span class="stat-item">
+                                <span class="stat-label">Total:</span> 215 lines
+                            </span>
+                        </div>
+                    </div>
+                
+                </div>
+            </div>
+            
+            <div class="commit-list-section">
+                <h3 class="commit-list-title">X-Large Commits (1)</h3>
+                <div class="commit-list">
+            
+                    <div class="commit-size-item">
+                        <div class="commit-size-header">
+                            <span class="commit-size-number">#003</span>
+                            <span class="commit-size-hash">c3d4e5f</span>
+                        </div>
+                        <div class="commit-size-title">Implement dashboard UI components</div>
+                        <div class="commit-size-stats">
+                            <span class="stat-item">
+                                <span class="stat-label">Files:</span> 6
+                            </span>
+                            <span class="stat-item">
+                                <span class="stat-label text-green">+520</span>
+                            </span>
+                            <span class="stat-item">
+                                <span class="stat-label text-red">-30</span>
+                            </span>
+                            <span class="stat-item">
+                                <span class="stat-label">Total:</span> 550 lines
+                            </span>
+                        </div>
+                    </div>
+                
+                </div>
+            </div>
+            
+        </section>
+    </main>
+
+    <footer class="page-footer">
+        <p>Generated at 2026-02-09 15:00:00 | Dev Log System</p>
+        <p><a href="https://github.com/example/dev-log-system" target="_blank">https://github.com/example/dev-log-system</a></p>
+    </footer>
+
+    <script>
+        const sizeCounts = {"small": 0, "medium": 4, "large": 7, "xlarge": 1};
+
+        // Size Distribution Pie Chart
+        new Chart(document.getElementById('sizeChart'), {
+            type: 'pie',
+            data: {
+                labels: ['Small (<50)', 'Medium (50-200)', 'Large (200-500)', 'X-Large (>500)'],
+                datasets: [{
+                    data: [sizeCounts.small, sizeCounts.medium, sizeCounts.large, sizeCounts.xlarge],
+                    backgroundColor: ['#10b981', '#3b82f6', '#f59e0b', '#ef4444'],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+
+    </script>
+</body>
+</html>

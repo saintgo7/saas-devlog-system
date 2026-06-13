@@ -211,7 +211,7 @@ HTML 파일은 선택적으로 커밋:
 
 ```bash
 # 템플릿이 없으면 현재 프로젝트에서 생성
-cd ~/01_DEV/saas-ws-abada-co-kr
+cd your-existing-project
 cp -r scripts ~/dev-log-template/
 cp docs/html/styles.css ~/dev-log-template/
 cp docs/html/scripts.js ~/dev-log-template/
@@ -253,7 +253,7 @@ git checkout HEAD~1 -- docs/html/data/dev-logs.json
 템플릿 자체 업데이트:
 
 ```bash
-cd ~/01_DEV/saas-ws-abada-co-kr
+cd your-existing-project
 
 # 최신 버전 복사
 cp -r scripts ~/dev-log-template/

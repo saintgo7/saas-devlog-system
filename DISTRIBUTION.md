@@ -3,7 +3,7 @@
 ## 배포 패키지 생성
 
 ### 현재 구조
-
+Please provide the text you would like me to translate or clean up.
 ```
 dev-log-system/
 ├── README.md              # 메인 문서

@@ -9,6 +9,8 @@ DB_PATH = "devlog.db"
 def init_db():
     """Initialize SQLite database with schema"""
     conn = sqlite3.connect(DB_PATH)
+    conn.execute("PRAGMA journal_mode=WAL")
+    conn.execute("PRAGMA foreign_keys=ON")
     conn.executescript("""
         -- Projects table
         CREATE TABLE IF NOT EXISTS projects (

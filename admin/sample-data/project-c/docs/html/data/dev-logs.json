@@ -1,0 +1,125 @@
+{
+  "project": "API Gateway Service",
+  "logs": [
+    {
+      "log_number": 1,
+      "commit": "1a2b3c4",
+      "type": "feat",
+      "title": "Set up API gateway with Gin framework",
+      "author": {"name": "Ph.D SNT Go.", "email": "saint@dev.local"},
+      "date": "2026-01-08 09:00:00",
+      "files_changed": 10,
+      "lines_added": 600,
+      "lines_deleted": 0,
+      "full_content": "feat: initialize API gateway\n\n- Create Go project with gin router\n- Set up reverse proxy handler\n- Add configuration with Viper\n- Create Dockerfile"
+    },
+    {
+      "log_number": 2,
+      "commit": "2b3c4d5",
+      "type": "feat",
+      "title": "Implement rate limiting with token bucket algorithm",
+      "author": {"name": "Ph.D SNT Go.", "email": "saint@dev.local"},
+      "date": "2026-01-12 11:00:00",
+      "files_changed": 6,
+      "lines_added": 380,
+      "lines_deleted": 10,
+      "full_content": "feat: rate limiting\n\n- Implement token bucket algorithm\n- Add per-client and per-route limits\n- Store rate limit state in Redis\n- Return proper 429 responses with retry-after header"
+    },
+    {
+      "log_number": 3,
+      "commit": "3c4d5e6",
+      "type": "feat",
+      "title": "Add JWT authentication middleware",
+      "author": {"name": "Ph.D SNT Go.", "email": "saint@dev.local"},
+      "date": "2026-01-15 14:30:00",
+      "files_changed": 8,
+      "lines_added": 420,
+      "lines_deleted": 25,
+      "full_content": "feat: JWT auth middleware\n\n- Create JWT validation middleware\n- Support RS256 and HS256 algorithms\n- Add JWKS endpoint integration\n- Implement token refresh flow"
+    },
+    {
+      "log_number": 4,
+      "commit": "4d5e6f7",
+      "type": "feat",
+      "title": "Add request/response logging and tracing",
+      "author": {"name": "Ph.D SNT Go.", "email": "saint@dev.local"},
+      "date": "2026-01-18 10:00:00",
+      "files_changed": 5,
+      "lines_added": 280,
+      "lines_deleted": 15,
+      "full_content": "feat: logging and tracing\n\n- Add structured logging with zerolog\n- Implement OpenTelemetry tracing\n- Create request ID middleware\n- Add correlation ID propagation"
+    },
+    {
+      "log_number": 5,
+      "commit": "5e6f7a8",
+      "type": "fix",
+      "title": "Fix timeout handling for upstream services",
+      "author": {"name": "Ph.D SNT Go.", "email": "saint@dev.local"},
+      "date": "2026-01-20 16:00:00",
+      "files_changed": 3,
+      "lines_added": 65,
+      "lines_deleted": 30,
+      "full_content": "fix: upstream timeout\n\n- Add configurable timeout per route\n- Implement circuit breaker pattern\n- Return 504 Gateway Timeout properly"
+    },
+    {
+      "log_number": 6,
+      "commit": "6f7a8b9",
+      "type": "perf",
+      "title": "Optimize connection pooling and keep-alive",
+      "author": {"name": "Ph.D SNT Go.", "email": "saint@dev.local"},
+      "date": "2026-01-23 11:30:00",
+      "files_changed": 4,
+      "lines_added": 150,
+      "lines_deleted": 80,
+      "full_content": "perf: connection pooling\n\n- Configure HTTP transport with optimal pool size\n- Enable keep-alive connections\n- Add connection reuse metrics\n- Reduce avg latency by 40%"
+    },
+    {
+      "log_number": 7,
+      "commit": "7a8b9c0",
+      "type": "feat",
+      "title": "Add health check and service discovery",
+      "author": {"name": "Ph.D SNT Go.", "email": "saint@dev.local"},
+      "date": "2026-01-26 09:00:00",
+      "files_changed": 7,
+      "lines_added": 350,
+      "lines_deleted": 20,
+      "full_content": "feat: health check & service discovery\n\n- Add /health and /ready endpoints\n- Implement upstream health checking\n- Add Consul service discovery integration\n- Create graceful degradation for unhealthy upstreams"
+    },
+    {
+      "log_number": 8,
+      "commit": "8b9c0d1",
+      "type": "test",
+      "title": "Add load testing with k6",
+      "author": {"name": "Ph.D SNT Go.", "email": "saint@dev.local"},
+      "date": "2026-01-29 14:00:00",
+      "files_changed": 4,
+      "lines_added": 280,
+      "lines_deleted": 0,
+      "full_content": "test: load testing\n\n- Create k6 test scripts for all routes\n- Test rate limiting under load\n- Verify circuit breaker behavior\n- Results: 10k RPS with p99 < 50ms"
+    },
+    {
+      "log_number": 9,
+      "commit": "9c0d1e2",
+      "type": "feat",
+      "title": "Implement API versioning and request transformation",
+      "author": {"name": "Ph.D SNT Go.", "email": "saint@dev.local"},
+      "date": "2026-02-02 10:00:00",
+      "files_changed": 9,
+      "lines_added": 520,
+      "lines_deleted": 35,
+      "full_content": "feat: API versioning\n\n- Support URL-based versioning (/v1/, /v2/)\n- Add header-based version selection\n- Implement request/response transformation\n- Create version deprecation notices"
+    },
+    {
+      "log_number": 10,
+      "commit": "0d1e2f3",
+      "type": "chore",
+      "title": "Set up CI/CD with GitHub Actions",
+      "author": {"name": "Ph.D SNT Go.", "email": "saint@dev.local"},
+      "date": "2026-02-04 15:00:00",
+      "files_changed": 5,
+      "lines_added": 200,
+      "lines_deleted": 0,
+      "full_content": "chore: CI/CD setup\n\n- Create GitHub Actions workflow\n- Add lint, test, build stages\n- Configure Docker image push to GHCR\n- Add automatic deployment to staging"
+    }
+  ]
+}

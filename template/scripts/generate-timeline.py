@@ -11,6 +11,20 @@ from typing import Dict, List
 from collections import defaultdict
 
 
+def load_project_config(project_root: Path) -> Dict:
+    """Load project configuration from project.json"""
+    config_file = project_root / 'docs' / 'html' / 'data' / 'project.json'
+    defaults = {'name': 'Project', 'description': 'Development Log', 'url': ''}
+    if config_file.exists():
+        try:
+            with open(config_file, 'r', encoding='utf-8') as f:
+                config = json.load(f)
+            return {**defaults, **config}
+        except Exception:
+            pass
+    return defaults
+
+
 TYPE_LABELS = {
     'feat': {'en': 'Features', 'ko': '기능 추가', 'color': '#10b981', 'icon': 'NEW'},
     'fix': {'en': 'Fixes', 'ko': '버그 수정', 'color': '#ef4444', 'icon': 'FIX'},
@@ -38,7 +52,7 @@ def format_date(date_str: str) -> str:
     try:
         dt = datetime.strptime(date_str, '%Y-%m-%d %H:%M:%S')
         return dt.strftime('%Y-%m-%d %H:%M')
-    except:
+    except (ValueError, TypeError):
         return date_str
 
 
@@ -47,7 +61,7 @@ def get_date_only(date_str: str) -> str:
     try:
         dt = datetime.strptime(date_str, '%Y-%m-%d %H:%M:%S')
         return dt.strftime('%Y-%m-%d')
-    except:
+    except (ValueError, TypeError):
         return date_str.split()[0] if ' ' in date_str else date_str
 
 
@@ -57,7 +71,7 @@ def get_weekday(date_str: str) -> str:
     try:
         dt = datetime.strptime(date_str, '%Y-%m-%d')
         return weekdays[dt.weekday()]
-    except:
+    except (ValueError, TypeError):
         return ''
 
 
@@ -117,6 +131,13 @@ def generate_html(data: Dict) -> str:
     logs = data['logs']
     generated_at = data.get('generated_at', '')
 
+    # Load project config
+    project_root = Path(__file__).parent.parent
+    config = load_project_config(project_root)
+    project_name = config['name']
+    project_url = config.get('url', '')
+    footer_url = f'<p><a href="{project_url}" target="_blank">{project_url}</a></p>' if project_url else ''
+
     # Sort logs by date (newest first)
     sorted_logs = sorted(logs, key=lambda x: x.get('date', ''), reverse=True)
 
@@ -151,15 +172,14 @@ def generate_html(data: Dict) -> str:
         '''
 
     # Prepare logs data for JavaScript
-    import json as json_module
-    logs_json = json_module.dumps(logs, ensure_ascii=False)
+    logs_json = json.dumps(logs, ensure_ascii=False)
 
     html = f'''<!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Development Timeline - PamOut</title>
+    <title>Development Timeline - {project_name}</title>
     <link rel="stylesheet" href="styles.css">
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script src="scripts.js"></script>
@@ -183,6 +203,7 @@ def generate_html(data: Dict) -> str:
             <a href="files.html" class="nav-link">Files</a>
             <a href="commit-size.html" class="nav-link">Commit Size</a>
             <a href="time-analysis.html" class="nav-link">Time Analysis</a>
+            <a href="deployment.html" class="nav-link">Deployment</a>
             <a href="stats.html" class="nav-link">Statistics</a>
         </nav>
 
@@ -211,8 +232,8 @@ def generate_html(data: Dict) -> str:
     </main>
 
     <footer class="page-footer">
-        <p>Generated at {generated_at} | PamOut Workstation Manager</p>
-        <p><a href="https://ws.abada.co.kr" target="_blank">https://ws.abada.co.kr</a></p>
+        <p>Generated at {generated_at} | {project_name}</p>
+        {footer_url}
     </footer>
 
     <!-- Modal -->
@@ -229,74 +250,8 @@ def generate_html(data: Dict) -> str:
     </div>
 
     <script>
-        const logsData = {logs_json};
-
-        // Configure marked options
-        marked.setOptions({{
-            breaks: true,
-            gfm: true,
-            headerIds: false,
-            mangle: false
-        }});
-
-        function openModal(index) {{
-            const log = logsData[index];
-            if (!log) return;
-
-            const modal = document.getElementById('detailModal');
-            const modalTitle = document.getElementById('modalTitle');
-            const modalBody = document.getElementById('modalBody');
-
-            // Set title
-            modalTitle.textContent = `#${{log.log_number}} - ${{log.title}}`;
-
-            // Parse and render markdown
-            const content = log.full_content || '';
-            const html = marked.parse(content);
-
-            // Safe rendering: Create temporary div, set innerHTML, then move to modal
-            const tempDiv = document.createElement('div');
-            tempDiv.innerHTML = html;
-            modalBody.innerHTML = '';
-            modalBody.appendChild(tempDiv);
-
-            modal.style.display = 'flex';
-            document.body.style.overflow = 'hidden';
-        }}
-
-        function closeModal(event) {{
-            if (event && event.target.classList.contains('modal-content')) {{
-                return;
-            }}
-            const modal = document.getElementById('detailModal');
-            modal.style.display = 'none';
-            document.body.style.overflow = 'auto';
-        }}
-
-        // Close modal on ESC key
-        document.addEventListener('keydown', function(event) {{
-            if (event.key === 'Escape') {{
-                closeModal();
-            }}
-        }});
-
-        // Dark Mode Toggle
-        function toggleDarkMode() {{
-            document.body.classList.toggle('dark-mode');
-            const isDark = document.body.classList.contains('dark-mode');
-            const icon = document.getElementById('darkModeIcon');
-            const label = document.getElementById('darkModeLabel');
-            icon.textContent = isDark ? '☀️' : '🌙';
-            label.textContent = isDark ? 'Light' : 'Dark';
-            localStorage.setItem('darkMode', isDark ? 'enabled' : 'disabled');
-        }}
-
-        // Load dark mode preference
-        if (localStorage.getItem('darkMode') === 'enabled') {{
-            document.body.classList.add('dark-mode');
-            document.getElementById('darkModeIcon').textContent = '☀️';
-            document.getElementById('darkModeLabel').textContent = 'Light';
-        }}
+        // Set global logsData for modal (used by scripts.js)
+        window.logsData = {logs_json};
     </script>
 </body>
 </html>'''

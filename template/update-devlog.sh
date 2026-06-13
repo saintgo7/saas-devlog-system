@@ -35,7 +35,7 @@ echo "   Backup created: $BACKUP_DIR"
 echo ""
 
 # 템플릿 디렉토리
-TEMPLATE_DIR=~/dev-log-template
+TEMPLATE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 if [ ! -d "$TEMPLATE_DIR" ]; then
     echo "❌ Error: Template not found at $TEMPLATE_DIR"

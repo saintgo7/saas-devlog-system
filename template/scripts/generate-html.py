@@ -10,6 +10,20 @@ from datetime import datetime
 from typing import Dict, List
 
 
+def load_project_config(project_root: Path) -> Dict:
+    """Load project configuration from project.json"""
+    config_file = project_root / 'docs' / 'html' / 'data' / 'project.json'
+    defaults = {'name': 'Project', 'description': 'Development Log', 'url': ''}
+    if config_file.exists():
+        try:
+            with open(config_file, 'r', encoding='utf-8') as f:
+                config = json.load(f)
+            return {**defaults, **config}
+        except Exception:
+            pass
+    return defaults
+
+
 TYPE_LABELS = {
     'feat': {'en': 'Features', 'ko': '기능 추가', 'color': '#10b981', 'icon': 'NEW'},
     'fix': {'en': 'Fixes', 'ko': '버그 수정', 'color': '#ef4444', 'icon': 'FIX'},
@@ -37,7 +51,7 @@ def format_date(date_str: str) -> str:
     try:
         dt = datetime.strptime(date_str, '%Y-%m-%d %H:%M:%S')
         return dt.strftime('%Y-%m-%d %H:%M')
-    except:
+    except (ValueError, TypeError):
         return date_str
 
 
@@ -134,6 +148,13 @@ def generate_html(data: Dict) -> str:
     logs = data['logs']
     generated_at = data.get('generated_at', '')
 
+    # Load project config
+    project_root = Path(__file__).parent.parent
+    config = load_project_config(project_root)
+    project_name = config['name']
+    project_desc = config['description']
+    project_url = config.get('url', '')
+
     # Group logs by type
     logs_by_type = {}
     for log in logs:
@@ -158,15 +179,14 @@ def generate_html(data: Dict) -> str:
         columns_html += generate_column_html('chore', other_logs, logs)
 
     # Prepare logs data for JavaScript
-    import json as json_module
-    logs_json = json_module.dumps(logs, ensure_ascii=False)
+    logs_json = json.dumps(logs, ensure_ascii=False)
 
     html = f'''<!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PamOut Development Progress</title>
+    <title>{project_name} Development Progress</title>
     <link rel="stylesheet" href="styles.css">
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script src="scripts.js"></script>
@@ -180,8 +200,8 @@ def generate_html(data: Dict) -> str:
 
     <header class="page-header">
         <div class="header-content">
-            <h1>PamOut Development Progress</h1>
-            <p class="header-subtitle">워크스테이션 관리 시스템 개발 로그</p>
+            <h1>{project_name} Development Progress</h1>
+            <p class="header-subtitle">{project_desc}</p>
         </div>
         <nav class="stats-nav">
             <a href="index.html" class="nav-link active">Kanban Board</a>
@@ -271,8 +291,8 @@ def generate_html(data: Dict) -> str:
     </main>
 
     <footer class="page-footer">
-        <p>Generated at {generated_at} | PamOut Workstation Manager</p>
-        <p><a href="https://ws.abada.co.kr" target="_blank">https://ws.abada.co.kr</a></p>
+        <p>Generated at {generated_at} | {project_name}</p>
+        {'<p><a href="' + project_url + '" target="_blank">' + project_url + '</a></p>' if project_url else ''}
     </footer>
 
     <!-- Modal -->
@@ -313,31 +333,6 @@ def generate_html(data: Dict) -> str:
         // Filter functionality
         const filterButtons = document.querySelectorAll('.filter-btn');
         let activeFilter = 'all';
-
-        filterButtons.forEach(btn => {{
-            btn.addEventListener('click', function() {{
-                // Update active button
-                filterButtons.forEach(b => b.classList.remove('active'));
-                this.classList.add('active');
-
-                activeFilter = this.dataset.type;
-
-                // Filter cards
-                allCards.forEach(card => {{
-                    const cardType = card.dataset.type;
-                    const searchTerm = searchInput.value.toLowerCase();
-                    const title = card.querySelector('.card-title').textContent.toLowerCase();
-                    const details = card.querySelector('.card-details')?.textContent.toLowerCase() || '';
-
-                    const matchesType = activeFilter === 'all' || cardType === activeFilter;
-                    const matchesSearch = title.includes(searchTerm) || details.includes(searchTerm);
-
-                    card.style.display = (matchesType && matchesSearch) ? 'block' : 'none';
-                }});
-
-                updateEmptyColumns();
-            }});
-        }});
 
         function updateEmptyColumns() {{
             const columns = document.querySelectorAll('.kanban-column');

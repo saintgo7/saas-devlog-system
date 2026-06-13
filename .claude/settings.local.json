@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3:*)",
+      "Bash(curl:*)",
+      "Bash(open:*)",
+      "mcp__plugin_testing-suite_playwright-server__browser_navigate",
+      "mcp__plugin_testing-suite_playwright-server__browser_take_screenshot",
+      "Bash(ls:*)",
+      "mcp__plugin_testing-suite_playwright-server__browser_resize",
+      "mcp__plugin_testing-suite_playwright-server__browser_evaluate",
+      "mcp__plugin_testing-suite_playwright-server__browser_run_code"
+    ]
+  }
+}

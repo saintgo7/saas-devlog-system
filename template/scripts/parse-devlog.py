@@ -92,7 +92,7 @@ def parse_devlog_file(filepath: Path) -> Optional[Dict]:
             try:
                 dt = datetime.strptime(data['date'], '%Y-%m-%d %H:%M:%S')
                 data['timestamp'] = dt.isoformat()
-            except:
+            except (ValueError, TypeError):
                 data['timestamp'] = data['date']
 
         # Extract full content for detail view

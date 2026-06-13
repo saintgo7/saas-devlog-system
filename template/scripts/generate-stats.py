@@ -7,12 +7,34 @@ Generates development progress statistics page with charts
 import json
 from pathlib import Path
 from datetime import datetime
+from typing import Dict
+
+
+def load_project_config(project_root: Path) -> Dict:
+    """Load project configuration from project.json"""
+    config_file = project_root / 'docs' / 'html' / 'data' / 'project.json'
+    defaults = {'name': 'Project', 'description': 'Development Log', 'url': ''}
+    if config_file.exists():
+        try:
+            with open(config_file, 'r', encoding='utf-8') as f:
+                config = json.load(f)
+            return {**defaults, **config}
+        except Exception:
+            pass
+    return defaults
 
 
 def generate_stats_html(data: dict) -> str:
     """Generate statistics HTML page"""
     stats = data['statistics']
     logs = data['logs']
+
+    # Load project config
+    project_root = Path(__file__).parent.parent
+    config = load_project_config(project_root)
+    project_name = config['name']
+    project_desc = config['description']
+    project_url = config.get('url', '')
 
     # Prepare data for charts
     categories = stats['categories']
@@ -22,27 +44,29 @@ def generate_stats_html(data: dict) -> str:
     total_cat = sum(categories.values())
     cat_percentages = {k: round(v / total_cat * 100, 1) if total_cat > 0 else 0 for k, v in categories.items()}
 
-    # Feature completion based on ROADMAP
-    features_status = {
-        'v1.0.0 - Basic Features': {'completed': 5, 'total': 5},
-        'v1.1.0 - Core Enhancement': {'completed': 4, 'total': 4},
-        'v1.2.0 - Management': {'completed': 1, 'total': 4},  # SuperAdmin 완료
-        'v1.3.0 - Enterprise': {'completed': 0, 'total': 6},
-        'v2.0.0 - Next Gen': {'completed': 0, 'total': 5},
-    }
-
     categories_json = json.dumps(categories)
     by_type_json = json.dumps(by_type)
-    features_json = json.dumps(features_status)
+
+    # Commits over time data
+    commits_by_date = {}
+    for log in logs:
+        date_str = log.get('date', '')
+        date_only = date_str.split(' ')[0] if ' ' in date_str else date_str
+        if date_only:
+            commits_by_date[date_only] = commits_by_date.get(date_only, 0) + 1
+    commits_timeline_json = json.dumps(dict(sorted(commits_by_date.items())))
+
+    footer_url = f'<p><a href="{project_url}" target="_blank">{project_url}</a></p>' if project_url else ''
 
     html = f'''<!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Development Statistics - PamOut</title>
+    <title>Development Statistics - {project_name}</title>
     <link rel="stylesheet" href="styles.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="scripts.js"></script>
 </head>
 <body>
     <!-- Dark Mode Toggle -->
@@ -54,7 +78,7 @@ def generate_stats_html(data: dict) -> str:
     <header class="page-header">
         <div class="header-content">
             <h1>Development Statistics</h1>
-            <p class="header-subtitle">PamOut 워크스테이션 관리 시스템 개발 현황</p>
+            <p class="header-subtitle">{project_desc}</p>
         </div>
         <nav class="stats-nav">
             <a href="index.html" class="nav-link">Kanban Board</a>
@@ -63,6 +87,7 @@ def generate_stats_html(data: dict) -> str:
             <a href="files.html" class="nav-link">Files</a>
             <a href="commit-size.html" class="nav-link">Commit Size</a>
             <a href="time-analysis.html" class="nav-link">Time Analysis</a>
+            <a href="deployment.html" class="nav-link">Deployment</a>
             <a href="stats.html" class="nav-link active">Statistics</a>
         </nav>
     </header>
@@ -93,7 +118,7 @@ def generate_stats_html(data: dict) -> str:
             <!-- Category Distribution -->
             <div class="chart-card">
                 <h3 class="chart-title">Code Distribution</h3>
-                <p class="chart-subtitle">프론트엔드 / 백엔드 / 문서 / 설정 비율</p>
+                <p class="chart-subtitle">Frontend / Backend / Docs / Config</p>
                 <canvas id="categoryChart"></canvas>
                 <div class="chart-legend">
                     <div class="legend-item">
@@ -118,68 +143,28 @@ def generate_stats_html(data: dict) -> str:
             <!-- Commit Type Distribution -->
             <div class="chart-card">
                 <h3 class="chart-title">Commit Types</h3>
-                <p class="chart-subtitle">커밋 타입별 분포</p>
+                <p class="chart-subtitle">Commit distribution by type</p>
                 <canvas id="typeChart"></canvas>
             </div>
 
-            <!-- Feature Completion -->
+            <!-- Commits Over Time -->
             <div class="chart-card full-width">
-                <h3 class="chart-title">Feature Completion Status</h3>
-                <p class="chart-subtitle">버전별 기능 완료 현황 (ROADMAP 기준)</p>
-                <div id="featureProgress"></div>
-            </div>
-
-            <!-- Next Steps -->
-            <div class="chart-card full-width">
-                <h3 class="chart-title">Next Steps</h3>
-                <p class="chart-subtitle">향후 개발 계획</p>
-                <div class="next-steps">
-                    <div class="step-item pending">
-                        <div class="step-badge">v1.2.0</div>
-                        <div class="step-content">
-                            <h4>User Management Enhancement</h4>
-                            <p>RBAC, Permission UI, API Key Management, Audit Log</p>
-                            <span class="step-duration">4-5 days</span>
-                        </div>
-                    </div>
-                    <div class="step-item pending">
-                        <div class="step-badge">v1.2.0</div>
-                        <div class="step-content">
-                            <h4>Workstation Grouping</h4>
-                            <p>Group/Tag System, Batch Operations</p>
-                            <span class="step-duration">3-4 days</span>
-                        </div>
-                    </div>
-                    <div class="step-item pending">
-                        <div class="step-badge">v1.2.0</div>
-                        <div class="step-content">
-                            <h4>Automation Workflow</h4>
-                            <p>Scheduled Tasks, Workflow Engine, Event Triggers</p>
-                            <span class="step-duration">5-6 days</span>
-                        </div>
-                    </div>
-                    <div class="step-item pending">
-                        <div class="step-badge">v1.2.0</div>
-                        <div class="step-content">
-                            <h4>GPU Monitoring</h4>
-                            <p>NVIDIA/AMD GPU Metrics, GPU Dashboard, Alerts</p>
-                            <span class="step-duration">3-4 days</span>
-                        </div>
-                    </div>
-                </div>
+                <h3 class="chart-title">Commits Over Time</h3>
+                <p class="chart-subtitle">Daily commit activity</p>
+                <canvas id="timelineChart"></canvas>
             </div>
         </section>
     </main>
 
     <footer class="page-footer">
-        <p>Generated at {data['generated_at']} | PamOut Workstation Manager</p>
-        <p><a href="https://ws.abada.co.kr" target="_blank">https://ws.abada.co.kr</a></p>
+        <p>Generated at {data['generated_at']} | {project_name}</p>
+        {footer_url}
     </footer>
 
     <script>
         const categories = {categories_json};
         const byType = {by_type_json};
-        const features = {features_json};
+        const commitsTimeline = {commits_timeline_json};
 
         // Category Doughnut Chart
         new Chart(document.getElementById('categoryChart'), {{
@@ -234,41 +219,38 @@ def generate_stats_html(data: dict) -> str:
             }}
         }});
 
-        // Feature Progress Bars
-        const progressContainer = document.getElementById('featureProgress');
-        Object.entries(features).forEach(([version, status]) => {{
-            const percentage = (status.completed / status.total * 100).toFixed(0);
-            const html = `
-                <div class="progress-item">
-                    <div class="progress-header">
-                        <span class="progress-label">${{version}}</span>
-                        <span class="progress-value">${{status.completed}} / ${{status.total}} (${{percentage}}%)</span>
-                    </div>
-                    <div class="progress-bar">
-                        <div class="progress-fill" style="width: ${{percentage}}%"></div>
-                    </div>
-                </div>
-            `;
-            progressContainer.innerHTML += html;
+        // Commits Over Time Line Chart
+        new Chart(document.getElementById('timelineChart'), {{
+            type: 'line',
+            data: {{
+                labels: Object.keys(commitsTimeline),
+                datasets: [{{
+                    label: 'Commits',
+                    data: Object.values(commitsTimeline),
+                    borderColor: '#3b82f6',
+                    backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                    fill: true,
+                    tension: 0.3
+                }}]
+            }},
+            options: {{
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {{
+                    legend: {{
+                        display: false
+                    }}
+                }},
+                scales: {{
+                    y: {{
+                        beginAtZero: true,
+                        ticks: {{
+                            stepSize: 1
+                        }}
+                    }}
+                }}
+            }}
         }});
-
-        // Dark Mode Toggle
-        function toggleDarkMode() {{
-            document.body.classList.toggle('dark-mode');
-            const isDark = document.body.classList.contains('dark-mode');
-            const icon = document.getElementById('darkModeIcon');
-            const label = document.getElementById('darkModeLabel');
-            icon.textContent = isDark ? '☀️' : '🌙';
-            label.textContent = isDark ? 'Light' : 'Dark';
-            localStorage.setItem('darkMode', isDark ? 'enabled' : 'disabled');
-        }}
-
-        // Load dark mode preference
-        if (localStorage.getItem('darkMode') === 'enabled') {{
-            document.body.classList.add('dark-mode');
-            document.getElementById('darkModeIcon').textContent = '☀️';
-            document.getElementById('darkModeLabel').textContent = 'Light';
-        }}
     </script>
 </body>
 </html>'''
