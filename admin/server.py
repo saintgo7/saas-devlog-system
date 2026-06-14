@@ -461,8 +461,7 @@ def get_project_commits(
 
         # Build query
         query = """
-            SELECT id, log_number, commit_hash, type, title, author_name, author_email,
-                   date, files_changed, lines_added, lines_deleted
+            SELECT id, log_number, commit_hash, type, title, author_name, author_email, date, files_changed, lines_added, lines_deleted
             FROM commits
             WHERE project_id = ?
         """
@@ -520,9 +519,7 @@ def search_commits(
     """Search commits across all projects"""
     with get_db() as conn:
         query = """
-            SELECT c.id, c.log_number, c.commit_hash, c.type, c.title,
-                   c.author_name, c.date, c.files_changed, c.lines_added, c.lines_deleted,
-                   p.slug as project_slug, p.name as project_name
+            SELECT c.id, c.log_number, c.commit_hash, c.type, c.title, c.author_name, c.date, c.files_changed, c.lines_added, c.lines_deleted, p.slug as project_slug, p.name as project_name
             FROM commits c
             JOIN projects p ON c.project_id = p.id
             WHERE (c.title LIKE ? OR c.full_content LIKE ?)
