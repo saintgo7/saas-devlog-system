@@ -873,4 +873,4 @@ if __name__ == "__main__":
     print("📊 Dashboard: http://localhost:8100")
     print("📖 API Docs:  http://localhost:8100/docs")
     print("="*60 + "\n")
-    uvicorn.run(app, host="0.0.0.0", port=8100)
+    uvicorn.run(app, host="127.0.0.1", port=8100)
