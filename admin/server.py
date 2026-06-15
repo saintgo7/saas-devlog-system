@@ -2,7 +2,7 @@
 """
 Dev Log Admin API Server - SQLite Backend
 """
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request, Depends
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, FileResponse, HTMLResponse
@@ -15,14 +15,34 @@ from contextlib import contextmanager
 from pathlib import Path
 import json
 
+# 로컬 전용 개발 도구이므로 localhost 출처만 허용한다 (LAN/CSRF 노출 차단)
+HOST = "127.0.0.1"
+PORT = 8100
+ALLOWED_ORIGINS = [
+    f"http://127.0.0.1:{PORT}",
+    f"http://localhost:{PORT}",
+]
+
 app = FastAPI(title="Dev Log Admin API", version="1.0.0")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=ALLOWED_ORIGINS,
     allow_methods=["GET", "POST", "DELETE"],
     allow_headers=["*"],
 )
+
+
+def require_local_origin(request: Request):
+    """상태 변경 POST 엔드포인트의 CSRF 방어: 외부 출처 요청 거부.
+
+    동일 출처(같은 서버가 서빙하는 프론트엔드)는 Origin 헤더가 허용 목록과
+    일치하므로 통과한다. 악성 사이트가 위조한 cross-origin POST는 Origin이
+    공격자 출처로 설정되어 차단된다.
+    """
+    origin = request.headers.get("origin")
+    if origin is not None and origin not in ALLOWED_ORIGINS:
+        raise HTTPException(status_code=403, detail="Cross-origin request denied")
 
 DB_PATH = "devlog.db"
 CONFIG_PATH = "config.json"
@@ -647,7 +667,7 @@ def get_project_path(slug: str):
     return {"slug": slug, "path": proj_dir}
 
 
-@app.post("/api/projects/{slug}/open-folder")
+@app.post("/api/projects/{slug}/open-folder", dependencies=[Depends(require_local_origin)])
 def open_project_folder(slug: str):
     """Open project folder in Finder"""
     paths = _load_project_paths()
@@ -658,7 +678,7 @@ def open_project_folder(slug: str):
     return {"message": "Folder opened", "path": proj_dir}
 
 
-@app.post("/api/projects/{slug}/open-terminal")
+@app.post("/api/projects/{slug}/open-terminal", dependencies=[Depends(require_local_origin)])
 def open_project_terminal(slug: str):
     """Open project folder in Terminal"""
     paths = _load_project_paths()
@@ -669,7 +689,7 @@ def open_project_terminal(slug: str):
     return {"message": "Terminal opened", "path": proj_dir}
 
 
-@app.post("/api/projects/{slug}/open-vscode")
+@app.post("/api/projects/{slug}/open-vscode", dependencies=[Depends(require_local_origin)])
 def open_project_vscode(slug: str):
     """Open project folder in VSCode"""
     paths = _load_project_paths()
@@ -680,7 +700,7 @@ def open_project_vscode(slug: str):
     return {"message": "VSCode opened", "path": proj_dir}
 
 
-@app.post("/api/projects/{slug}/open-cursor")
+@app.post("/api/projects/{slug}/open-cursor", dependencies=[Depends(require_local_origin)])
 def open_project_cursor(slug: str):
     """Open project folder in Cursor"""
     paths = _load_project_paths()
@@ -691,7 +711,7 @@ def open_project_cursor(slug: str):
     return {"message": "Cursor opened", "path": proj_dir}
 
 
-@app.post("/api/sync")
+@app.post("/api/sync", dependencies=[Depends(require_local_origin)])
 def trigger_sync():
     """Trigger sync from config.json"""
     from sync import run_sync
@@ -873,7 +893,7 @@ if __name__ == "__main__":
     print("\n" + "="*60)
     print("🚀 Dev Log Admin Server")
     print("="*60)
-    print("📊 Dashboard: http://localhost:8100")
-    print("📖 API Docs:  http://localhost:8100/docs")
+    print(f"📊 Dashboard: http://localhost:{PORT}")
+    print(f"📖 API Docs:  http://localhost:{PORT}/docs")
     print("="*60 + "\n")
-    uvicorn.run(app, host="0.0.0.0", port=8100)
+    uvicorn.run(app, host=HOST, port=PORT)
