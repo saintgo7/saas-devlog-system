@@ -56,3 +56,23 @@ def test_read_endpoint_unaffected():
     # 읽기 전용 GET 은 가드 영향을 받지 않는다.
     res = client.get("/api/projects", headers={"origin": "http://evil.example.com"})
     assert res.status_code == 200
+
+
+# 프로젝트+커밋을 삭제하는 상태 변경 DELETE 도 동일 가드를 받아야 한다.
+# 존재하지 않는 슬러그라 가드 통과 시 핸들러가 404 를 반환(실제 삭제 없음).
+DELETE_PATH = f"/api/projects/{BOGUS_SLUG}"
+
+
+def test_foreign_origin_delete_rejected():
+    res = client.delete(DELETE_PATH, headers={"origin": "http://evil.example.com"})
+    assert res.status_code == 403, f"{DELETE_PATH} should reject foreign origin"
+
+
+def test_allowed_origin_delete_passes_guard():
+    res = client.delete(DELETE_PATH, headers={"origin": server.ALLOWED_ORIGINS[0]})
+    assert res.status_code != 403, f"{DELETE_PATH} should pass for allowed origin"
+
+
+def test_no_origin_delete_passes_guard():
+    res = client.delete(DELETE_PATH)
+    assert res.status_code != 403, f"{DELETE_PATH} should pass when no origin header"

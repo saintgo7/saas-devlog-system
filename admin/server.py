@@ -641,7 +641,7 @@ def get_timeline_stats(days: int = 30):
             "timeline": [dict(row) for row in rows]
         }
 
-@app.delete("/api/projects/{slug}")
+@app.delete("/api/projects/{slug}", dependencies=[Depends(require_local_origin)])
 def delete_project(slug: str):
     """Delete a project and all its commits"""
     with get_db() as conn:
