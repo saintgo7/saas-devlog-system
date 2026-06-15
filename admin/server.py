@@ -805,8 +805,8 @@ def serve_preview(slug: str, path: str = ""):
 
     file_path = (proj_path / path).resolve()
 
-    # Security: prevent path traversal
-    if not str(file_path).startswith(str(proj_path)):
+    # Security: prevent path traversal (sibling-dir escape, ../ 등 차단)
+    if not file_path.is_relative_to(proj_path):
         raise HTTPException(status_code=403, detail="Access denied")
 
     if not file_path.is_file():
